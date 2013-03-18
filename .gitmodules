@@ -1,0 +1,3 @@
+[submodule "vendor/spritejs"]
+	path = vendor/spritejs
+	url = git://github.com/batiste/sprite.js.git
