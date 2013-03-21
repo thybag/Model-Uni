@@ -2,6 +2,8 @@ require(["./vendor/spritejs/sprite.js","./game/simulation.js"], function(spr, si
 
 	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h':  window.innerHeight});
 	var world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
+	var players = scene.Layer("players",  {"useCanvas":true, "autoClear":false});
+	var ui = scene.Layer("ui",  {"useCanvas":true, "autoClear":true});
 	//var overlay = scene.Layer("overlay");
 
 	scene.loadImages([
