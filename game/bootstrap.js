@@ -8,6 +8,10 @@ require(["./vendor/spritejs/sprite.js","./game/simulation.js"], function(spr, si
 
 	scene.loadImages([
 		"assets/tiles/grass.png",
+		"assets/tiles/lotW.png",
+		"assets/tiles/lotE.png",
+		"assets/tiles/selector.png",
+		
 		"assets/tiles/grass_wtree.png",
 		"assets/tiles/road.png",
 		"assets/tiles/roadEW.png",

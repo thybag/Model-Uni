@@ -11,9 +11,12 @@ define("game/simulation.js",
 				this._x = this.x;
 				this.y = 200;
 				this._y = this.y;
+
+				this.selected_tile = {x:0, y :0}
 				this.scale = 1;
-				this.is_dirty = function(){ return !(this.y == this._y && this.x == this._x)};
-				this.clean = function(){ this._y = this.y; this._x = this.x; };
+				this.dirty = false;
+				this.is_dirty = function(){ return !(this.y == this._y && this.x == this._x && !this.dirty)};
+				this.clean = function(){ this._y = this.y; this._x = this.x; this.dirty=false; };
 			}
 
 			// actors (live stuff)
@@ -37,7 +40,7 @@ define("game/simulation.js",
 
 				// populate tiles
 				this.tiles = {
-					"grass": this.scene.Sprite('assets/tiles/grass.png', { "layer": this.world }).scale(0.6),
+					"grass": this.scene.Sprite('assets/tiles/grass.png', { "layer": this.world }),
 					"trees": this.scene.Sprite('assets/tiles/grass_wtree.png', { "layer": this.world }),
 
 					"lot_w": this.scene.Sprite('assets/tiles/lotW.png', { "layer": this.world }),
@@ -46,15 +49,15 @@ define("game/simulation.js",
 
 					"road_ew": this.scene.Sprite('assets/tiles/roadNS.png', { "layer": this.world }),
 					"road_ns": this.scene.Sprite('assets/tiles/roadEW.png', { "layer": this.world }),
-					"road": this.scene.Sprite('assets/tiles/road.png', { "layer": this.world })
+					"road": this.scene.Sprite('assets/tiles/road.png', { "layer": this.world }),
+
+					"selector": this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world }),
 				}
 	
 				//this.tiles.get('assets/tiles/grass.png');
 				this.renderWorld(this.viewport.x,this.viewport.y);
 
 				// make scalable
-
-				this.viewport.scale = 1;
 				document.addEventListener('mousewheel', function(e){
 					if(e.wheelDelta > 0){
 						//max size
@@ -102,6 +105,10 @@ define("game/simulation.js",
 					tile_y = (tile_prop.hh * (y+1)) +  offset_y;
 				}
 
+				//selected_tile
+				s = this.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y)
+				this.tiles["selector"].position(s.x, s.y).canvasUpdate(this.world);
+
 			}
 
 
@@ -114,8 +121,8 @@ define("game/simulation.js",
 
 			this.findTileCoords = function (x, y){
 				// Find top left corner of tile given its map coords
-				real_y =  (this.viewport.y + (y*tile_prop.hh) + (x*tile_prop.hh)) * this.viewport.scale;
-				real_x =  (this.viewport.x + (y*tile_prop.hw) - (x*tile_prop.hw)) * this.viewport.scale;
+				real_y =  (this.viewport.y + (y*tile_prop.hh) + (x*tile_prop.hh));// * this.viewport.scale;
+				real_x =  (this.viewport.x + (y*tile_prop.hw) - (x*tile_prop.hw));// * this.viewport.scale;
 
 				return {x: real_x, y: real_y};
 
@@ -123,16 +130,19 @@ define("game/simulation.js",
 			this.findTileAt = function(x, y){
 				//http://stackoverflow.com/questions/10768865/isometry-incorrect-coordinates-from-mouse-pos-tile-coords-formula
 				
+				y = y/ game.viewport.scale;
+				x = x/ game.viewport.scale;
 				// Remove offsets
-				y = (y - this.viewport.y);
+				y = (y - this.viewport.y) ;
 				x = (x - this.viewport.x);
 
 				// figure out roughly which tile has been selected
-				tile_h = tile_prop.h;
-				tile_w = tile_prop.w;
+				tile_h = tile_prop.h ;
+				tile_w = tile_prop.w ;
 
-				yIso = Math.floor( ((y / tile_h) + (x /  tile_w)));
-				xIso = Math.floor( ((y / tile_h) - (x / tile_w)));
+				yIso = Math.floor( ((y / tile_h) + (x /  tile_w)) );
+				xIso = Math.floor( ((y / tile_h) - (x / tile_w))   );
+
 
 				// Get real tile position
 				tile_real = this.findTileCoords(xIso,yIso);
@@ -145,17 +155,20 @@ define("game/simulation.js",
 
 				if(this.outsideLine({x:50, y:0},{x:0, y:25}, local )){
 					yIso--; // 1 up, left
-					//console.log("should be on up (left)");
+					//console.log("correction applied 1");
 				}else if(this.outsideLine({x:0, y:25},{x:50, y:50}, local)){
 					xIso++; // 1 down, left
+					//console.log("correction applied 2");
 				}else if(this.outsideLine({x:50, y:50},{x:100, y:25}, local)){
 					yIso++; // 1 up, right
+					//console.log("correction applied 3");
 
 				}else if(this.outsideLine({x:100, y:25},{x:50, y:0}, local)){
 					xIso--; // 1 down, right
+					//console.log("correction applied 4");
 				}
 				
-				return {"x": xIso, "y": yIso}
+				return {"x": xIso, "y": yIso, "px_x": tile_real.x, "px_y":tile_real.y}
 
 				
 
@@ -187,10 +200,18 @@ define("game/simulation.js",
 				var client = this.scene;
 				var edge_boundry = 50;
 				
+				tt = this.findTileAt(mouse.x,mouse.y);
+				if(this.viewport.selected_tile.x != tt.x || this.viewport.selected_tile.y != tt.y){
+					this.viewport.selected_tile = tt;
+    				this.viewport.dirty = true;
+				}
 				
-    			
+
 				if(this.inputs.mouse.click){
-					this.findTileAt(this.inputs.mouse.click.x, this.inputs.mouse.click.y);
+					tile = this.findTileAt(this.inputs.mouse.click.x, this.inputs.mouse.click.y);
+
+					this.map.map[tile.x][tile.y] = 'road_ew'
+					this.viewport.dirty = true;
 				}
 
 
