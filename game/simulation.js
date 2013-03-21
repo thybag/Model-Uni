@@ -1,29 +1,22 @@
 var game;
 define("game/simulation.js",
 	// dependencies
-	['game/map/map.js'],
+	[
+		'game/map/map.js',
+		'game/client/viewport.js'
+	],
 	// content
 	function (map) {
 		return new function() {	
 
-			this.viewport = new function() {
-				this.x = 500;
-				this._x = this.x;
-				this.y = 200;
-				this._y = this.y;
-
-				this.selected_tile = {x:0, y :0}
-				this.scale = 1;
-				this.dirty = false;
-				this.is_dirty = function(){ return !(this.y == this._y && this.x == this._x && !this.dirty)};
-				this.clean = function(){ this._y = this.y; this._x = this.x; this.dirty=false; };
-			}
+			// Load viewport
+			this.viewport = require("game/client/viewport.js");
 
 			// actors (live stuff)
 			this.entities = [];
 
 			// world
-			this.tiles = {};
+			this.tile_sprites = {};
 			this.map = {};
 
 		
@@ -39,21 +32,11 @@ define("game/simulation.js",
 				this.inputs = this.scene.Input();
 
 				// populate tiles
-				this.tiles = {
-					"grass": this.scene.Sprite('assets/tiles/grass.png', { "layer": this.world }),
-					"trees": this.scene.Sprite('assets/tiles/grass_wtree.png', { "layer": this.world }),
-
-					"lot_w": this.scene.Sprite('assets/tiles/lotW.png', { "layer": this.world }),
-					"lot_e": this.scene.Sprite('assets/tiles/lotE.png', { "layer": this.world }),
-
-
-					"road_ew": this.scene.Sprite('assets/tiles/roadNS.png', { "layer": this.world }),
-					"road_ns": this.scene.Sprite('assets/tiles/roadEW.png', { "layer": this.world }),
-					"road": this.scene.Sprite('assets/tiles/road.png', { "layer": this.world }),
-
-					"selector": this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world }),
+				for(tile in this.map.tiles){
+					this.tile_sprites[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
 				}
-	
+				this.tile_sprites['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
+
 				//this.tiles.get('assets/tiles/grass.png');
 				this.renderWorld(this.viewport.x,this.viewport.y);
 
@@ -97,7 +80,7 @@ define("game/simulation.js",
 					for (var x = 0; x < map.w; x++) {
 						current_tile = map.map[y][x];
 
-						this.tiles[current_tile].position(tile_x, tile_y-(this.tiles[current_tile].h % 65)).canvasUpdate(this.world);
+						this.tile_sprites[current_tile].position(tile_x, tile_y-(this.tile_sprites[current_tile].h % 65)).canvasUpdate(this.world);
 			 		 	tile_x += tile_prop.hw;
 			 		 	tile_y += tile_prop.hh;
 					}
@@ -107,7 +90,7 @@ define("game/simulation.js",
 
 				//selected_tile
 				s = this.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y)
-				this.tiles["selector"].position(s.x, s.y).canvasUpdate(this.world);
+				this.tile_sprites["selector"].position(s.x, s.y).canvasUpdate(this.world);
 
 			}
 
@@ -208,9 +191,13 @@ define("game/simulation.js",
 				
 
 				if(this.inputs.mouse.click){
+
 					tile = this.findTileAt(this.inputs.mouse.click.x, this.inputs.mouse.click.y);
 
-					this.map.map[tile.x][tile.y] = 'road_ew'
+					this.map.updateTile(tile.x, tile.y, 'road')
+					
+
+					//
 					this.viewport.dirty = true;
 				}
 
