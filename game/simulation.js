@@ -54,7 +54,7 @@ define("game/simulation.js",
 						game.viewport.scale -= 0.1;
 						// out
 					}
-					console.log(game.viewport.scale);
+					
 					here.scaleWorld(game.viewport.scale);
 
 				}, false);
@@ -189,18 +189,11 @@ define("game/simulation.js",
     				this.viewport.dirty = true;
 				}
 				
-
-				if(this.inputs.mouse.click){
-
-					tile = this.findTileAt(this.inputs.mouse.click.x, this.inputs.mouse.click.y);
-
-					this.map.updateTile(tile.x, tile.y, 'road')
-					
-
-					//
+				if(this.inputs.mousedown) {
+					tile = this.findTileAt(mouse.x, mouse.y);
+					this.map.updateTile(tile.x, tile.y, 'road');
 					this.viewport.dirty = true;
 				}
-
 
 				if(mouse.x < edge_boundry && !(mouse.x < 1)){
 					this.viewport.x += 4;

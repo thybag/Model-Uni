@@ -26,7 +26,7 @@ define("game/map/map.js",
 			}
 
 			this.updateTile = function(x, y, new_tile){
-				console.log(x, y);
+
 				// Valid tile?
 				if(x>0 && x < (this.w-1) && y>0 && y < (this.h-1) ){
 
@@ -54,7 +54,7 @@ define("game/map/map.js",
 
 					// trigger changes on near by tiles if this tile has changed
 					if(tile != original_tile){
-						console.log("i have changed dude!");
+						//console.log("i have changed dude!");
 						this.updateTile(x+1, y);
 						this.updateTile(x, y-1);
 						this.updateTile(x-1, y);

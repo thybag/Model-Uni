@@ -1,0 +1,13 @@
+Model Uni - A university simulation game (MIT Licensed)
+
+Written by Carl Saggs
+
+Uses:
+	Sprite.js - https://github.com/batiste/sprite.js
+	Require.js - http://requirejs.org/
+
+
+Tile set from: Kenney.nl via http://opengameart.org/content/isometric-road-tiles-nova (CC-BY 3)
+
+
+
