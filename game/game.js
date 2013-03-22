@@ -1,10 +1,16 @@
-var game;
-define("game/simulation.js",
+/**
+ * Game: Model-uni
+ * Main game class for "Model uni" university simulation game.
+ *
+ * @package	model-uni
+ */
+define("game/game.js",
 	// dependencies
 	[
 		'game/map/map.js',
 		'game/client/ui.js',
-		'game/client/viewport.js'
+		'game/client/viewport.js',
+		'game/client/renderer.js'	
 	],
 	// content
 	function (map, ui) {
@@ -12,41 +18,36 @@ define("game/simulation.js",
 
 			// Load viewport
 			this.viewport = require("game/client/viewport.js");
-
+			// Load render
+			this.renderer = require("game/client/renderer.js");
+			// Load "client"
 			this.client = new function(){
 				this.selected_tile = 'road';
-
 			}
 
+			// Set UI
 			this.ui = ui;
 
 			// actors (live stuff)
 			this.entities = [];
 
-			// world
-			this.tile_sprites = {};
-			this.map = {};
+			// world (set in constructor)
+			this.map = null;
 
-		
 			//debug
 			here = game = this;
 
-			var tile_prop = {"w":100, "h":50, "hw": 50, "hh": 25};
-
+			/** 
+			 * __construct, initiates new game
+			 *
+			 */
 			this.__construct = function(){
 
 				this.map = map.new(50,50);
 				// inputs
 				this.inputs = this.scene.Input();
-
-				// populate tiles
-				for(tile in this.map.tiles){
-					this.tile_sprites[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
-				}
-				this.tile_sprites['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
-
-				//this.tiles.get('assets/tiles/grass.png');
-				this.renderWorld(this.viewport.x,this.viewport.y);
+				// Setup render
+				this.renderer.init(this.viewport, this.map, this.world);
 
 				// make scalable
 				document.addEventListener('mousewheel', function(e){
@@ -62,57 +63,25 @@ define("game/simulation.js",
 						game.viewport.scale -= 0.1;
 						// out
 					}
-					
-					here.scaleWorld(game.viewport.scale);
+					game.renderer.scale(game.viewport.scale);
 
 				}, false);
 
 				ui.showMenu();
 
 			}
-
-			this.scaleWorld = function(scale){
-				world = this.world;
-				world.dom.style[sjs.tproperty+"Origin"] = "0 0";
-			    world.dom.style[sjs.tproperty] = "scale(" + scale + "," + scale + ")";
-			    world.dom.width = this.scene.w/scale *1;
-			    world.dom.height = this.scene.h/scale *1;
-
-			    this.renderWorld(this.viewport.x, this.viewport.y);
-			}
-
-			this.renderWorld = function(offset_x, offset_y){
-				var tile_x = offset_x;
-				var tile_y = offset_y;
-				var current_tile;
-
-				for (var y = 0; y < map.h; y++) {
-					for (var x = 0; x < map.w; x++) {
-						current_tile = map.map[y][x];
-
-						this.tile_sprites[current_tile].position(tile_x, tile_y-(this.tile_sprites[current_tile].h % 65)).canvasUpdate(this.world);
-			 		 	tile_x += tile_prop.hw;
-			 		 	tile_y += tile_prop.hh;
-					}
-					tile_x = (-tile_prop.hw * (y+1)) + offset_x;
-					tile_y = (tile_prop.hh * (y+1)) +  offset_y;
-				}
-
-				//selected_tile
-				s = this.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y)
-				this.tile_sprites["selector"].position(s.x, s.y).canvasUpdate(this.world);
-
-			}
+			
 
 
 			this.tick = function(){ 
+				this.check_inputs();
 				this.run();
-
-				this.render();
+				this.renderer.tick();
 			}
 
 
 			this.findTileCoords = function (x, y){
+				var tile_prop = this.map.tile_propeties;
 				// Find top left corner of tile given its map coords
 				real_y =  (this.viewport.y + (y*tile_prop.hh) + (x*tile_prop.hh));// * this.viewport.scale;
 				real_x =  (this.viewport.x + (y*tile_prop.hw) - (x*tile_prop.hw));// * this.viewport.scale;
@@ -123,6 +92,7 @@ define("game/simulation.js",
 			this.findTileAt = function(x, y){
 				//http://stackoverflow.com/questions/10768865/isometry-incorrect-coordinates-from-mouse-pos-tile-coords-formula
 				
+				var tile_prop = this.map.tile_propeties;
 				y = y/ game.viewport.scale;
 				x = x/ game.viewport.scale;
 				// Remove offsets
@@ -163,33 +133,14 @@ define("game/simulation.js",
 				
 				return {"x": xIso, "y": yIso, "px_x": tile_real.x, "px_y":tile_real.y}
 
-				
-
-				/*
-				_final = this.findTileCoords(xIso,yIso);;
-				aa = document.createElement('div');
-				aa.style.position = 'absolute';
-				aa.style.height = (tile_prop.h-2)*this.viewport.scale+'px';
-				aa.style.width = (tile_prop.w-2)*this.viewport.scale+'px';
-				aa.style.border = 'solid 1px red';
-				aa.style.left = _final.x +'px';
-				aa.style.top = 42+ _final.y+'px';
-				aa.style.zIndex = '99999'; 
-				document.body.appendChild(aa);
-		*/
-				 
-
-
 			}
 			this.outsideLine = function(a,b,c){
 				return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
-
 			}
 
-
 			var disable_scroll = false;
+			this.check_inputs = function(){
 
-			this.render = function(){
 				var mouse = this.inputs.mouse.position;
 				var client = this.scene;
 				var edge_boundry = 50;
@@ -202,7 +153,6 @@ define("game/simulation.js",
 				
 				if(this.inputs.mousedown) {
 					tile = this.findTileAt(mouse.x, mouse.y);
-				
 					this.map.updateTile(tile.x, tile.y, this.client.selected_tile);
 					this.viewport.dirty = true;
 				}
@@ -225,13 +175,6 @@ define("game/simulation.js",
 				if(mouse.y > client.h-edge_boundry-40 && !(mouse.y > client.h-3) && !disable_scroll){
 					this.viewport.y -= 5;
 				}
-
-				if(this.viewport.is_dirty()){
-					this.world.clear();
-					this.renderWorld(this.viewport.x, this.viewport.y);
-					this.viewport.clean();
-				}
-
 			}
 
 			this.run = function(){

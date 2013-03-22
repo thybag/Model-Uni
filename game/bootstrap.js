@@ -1,33 +1,58 @@
-require(["./vendor/spritejs/sprite.js","./game/simulation.js"], function(spr, sim) {
+// Make public scope "game"
+var game;
+// Load libary and "game"
+require(["./vendor/spritejs/sprite.js","./game/game.js"], function(spr, game) {
 
+	// Setup sprite.js and create layers
 	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h':  window.innerHeight});
 	var world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
 	var players = scene.Layer("players",  {"useCanvas":true, "autoClear":false});
 	var ui = scene.Layer("ui",  {"useCanvas":true, "autoClear":true});
-	//var overlay = scene.Layer("overlay");
 
+	// Load images
 	scene.loadImages([
 		"assets/tiles/grass.png",
+		"assets/tiles/grass_wtree.png",
+
 		"assets/tiles/lotW.png",
 		"assets/tiles/lotE.png",
-		"assets/tiles/selector.png",
-		
-		"assets/tiles/grass_wtree.png",
+		// basic
 		"assets/tiles/road.png",
+		"assets/tiles/road_end.png",
+		// straight
 		"assets/tiles/roadEW.png",
-		"assets/tiles/roadNS.png"
+		"assets/tiles/roadNS.png",
+		// ends
+		"assets/tiles/endN.png",
+		"assets/tiles/endE.png",
+		"assets/tiles/endS.png",
+		"assets/tiles/endW.png",
+		// corners
+		"assets/tiles/roadES.png",
+		"assets/tiles/roadNE.png",
+		"assets/tiles/roadNW.png",
+		"assets/tiles/roadSW.png",
+		// 3 way joins
+		"assets/tiles/crossroadESW.png",
+		"assets/tiles/crossroadNES.png",
+		"assets/tiles/crossroadNEW.png",
+		"assets/tiles/crossroadNSW.png",
+		"assets/tiles/crossroadNSW.png",
+		// crossroad
+		"assets/tiles/crossroad.png",
 	], 
 	function() {
-			// Provide scene
-			sim.scene = scene;
-			sim.world = world;
-			sim.__construct();
+			// Provide game with "world" objects
+			game.scene = scene;
+			game.world = world;
+			game.__construct();
 
 			// Start game loop
 			var ticker = scene.Ticker(function() {
-				sim.tick(); 
+				game.tick(); 
 			}).run();
-
-			sim.ticker = ticker;
+			
+			// Give game access to ticker
+			game.ticker = ticker;
 		});
 });

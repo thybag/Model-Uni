@@ -10,6 +10,7 @@ define("game/map/map.js",
 			
 			this.map = [];
 			this.tiles = tiles;
+			this.tile_propeties = {"w":100, "h":50, "hw": 50, "hh": 25};
 
 
 			this.load = function(){
