@@ -1,7 +1,7 @@
 # Model Uni
 ### An open source university simulation game.
 
-**Warning** This project is still in very early pre-alpha development and is highly unstable. Much of the codebase is incomplete and sparsely commented.
+**Warning** This project is still in very early pre-alpha development and is highly unstable. Much of the codebase is incomplete and sparsely commented. I am currently only regularly testing in chrome.
 
 Model-uni is an isometric University simulation game. Found your own university, build the campus, hire the staff and set the courses. Then attempt to make a profit without the staff revolting over lack of car parking and the students sleeping through all their classes.
 

@@ -5,9 +5,9 @@ require(["./vendor/spritejs/sprite.js","./game/game.js", "./vendor/store.js"], f
 
 
 	window.store = store;
-	
+
 	// Setup sprite.js and create layers
-	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h':  window.innerHeight});
+	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h':  window.innerHeight-30});
 	var world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
 	var players = scene.Layer("players",  {"useCanvas":true, "autoClear":false});
 	var ui = scene.Layer("ui",  {"useCanvas":true, "autoClear":true});

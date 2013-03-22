@@ -75,6 +75,27 @@ define("game/game.js",
 
 				}, false);
 
+				// Make game resizable
+				$(window).resize(function() {
+
+					// calc new width and heights
+					var new_height = window.innerHeight -30;
+					var new_width = window.innerWidth;
+					// Adjust canvas heights for scaling
+					canvas_height = new_height / game.viewport.scale;
+					canvas_width = new_width / game.viewport.scale;
+
+					// Update game
+					game.world.scene.w = new_width;
+					game.world.scene.h = new_height;
+					// update canvas's
+					canvas = $("canvas").attr("width",canvas_width).attr("height",canvas_height);
+					// And canvas parent..
+					$(canvas[0].parentNode).css("width",new_width+'px').css("height",new_height+'px');
+					// tell game we now need to redraw
+					 game.viewport.dirty = true;
+				});
+
 				// Show build Menu
 				ui.showMenu();
 			}
