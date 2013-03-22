@@ -5,6 +5,7 @@
     <title>Model-Uni - Run your own university</title>
 
     <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css' />
+
 	<style>
 	    body {
 	        overflow: hidden;
@@ -29,13 +30,24 @@
 	<script src="game/bootstrap.js"></script>
 </head>
 <body>
-	<div class="navbar navbar-inverse">
+	<div class="navbar navbar-inverse game-ui">
 	  <div class="navbar-inner">
 	    <a class="brand" href="#">Model Uni</a>
 	     <ul class="nav pull-right">
 	     	  <li><a href="#">Courses</a></li>
 	     	  <li><a href="#">Staff</a></li>
 	     	  <li><a href="#">Finances</a></li>
+	     	  <li class='divider'></li>
+
+	     	  <li class="dropdown">
+			 	 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu</a>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+				     <li><a href="#" onclick='game.save_game();'>Save Game</a></li>
+				      <li><a href="#" onclick='game.load_game();'>Load game</a></li>
+				      <li class='divider'></li>
+				      <li><a href="#">New Game</a></li>
+				  </ul>
+				</li>
 	     </div>
 	  </div>
 	</div>

@@ -13,12 +13,7 @@ define("game/map/map.js",
 			this.tile_propeties = {"w":100, "h":50, "hw": 50, "hh": 25};
 
 
-			this.load = function(){
 
-			}
-			this.save = function(){
-				
-			}
 			this.new = function(w,h){
 				this.w = w;
 				this.h = h;
@@ -66,5 +61,14 @@ define("game/map/map.js",
 					}	
 				}
 			}
+			this.load = function(data){
+				this.w = data.w;
+				this.h = data.h;
+				this.map = data.map;
+			}
+			this.forSave = function(){
+				return {"w": this.w, "h": this.h, "map" : this.map};
+			}
+			
 		}
 	});

@@ -1,8 +1,11 @@
 // Make public scope "game"
 var game;
 // Load libary and "game"
-require(["./vendor/spritejs/sprite.js","./game/game.js"], function(spr, game) {
+require(["./vendor/spritejs/sprite.js","./game/game.js", "./vendor/store.js"], function(spr, game, store) {
 
+
+	window.store = store;
+	
 	// Setup sprite.js and create layers
 	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h':  window.innerHeight});
 	var world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
@@ -51,7 +54,7 @@ require(["./vendor/spritejs/sprite.js","./game/game.js"], function(spr, game) {
 			var ticker = scene.Ticker(function() {
 				game.tick(); 
 			}).run();
-			
+
 			// Give game access to ticker
 			game.ticker = ticker;
 		});

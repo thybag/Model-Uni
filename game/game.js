@@ -43,7 +43,13 @@ define("game/game.js",
 			this.__construct = function(){
 
 				// Generate new MAP
-				this.map = map.new(50,50);
+				if(this.has_saves()){
+					this.map = map;
+					this.load_game();
+				}else{
+					this.map = map.new(50,50);
+				}
+				
 
 				// connect inputs
 				this.inputs = this.scene.Input();
@@ -164,7 +170,7 @@ define("game/game.js",
 					this.viewport.dirty = true;
 				}
 
-				$(".ui-element").hover(function(){
+				$(".game-ui").hover(function(){
 					disable_scroll = true;
 				},function(){
 					disable_scroll = false;
@@ -183,6 +189,28 @@ define("game/game.js",
 					this.viewport.y -= 5;
 				}
 			}
-		};
+
+			// Save map (single save currently)
+			this.save_game = function(){
+				if(window.store.enabled){
+					store.set('map', this.map.forSave())
+					console.log("game saved");
+				}else{
+					alert("unable to save!");
+				}
+			}
+
+			this.has_saves = function(){
+				return (window.store.enabled && typeof store.get('map') !== 'undefined');
+			}
+
+			// Load map
+			this.load_game = function(){
+				if(window.store.enabled){
+					console.log("game loaded");
+					this.map.load(store.get('map'));
+				}
+			}
+		}		
 	}
 );

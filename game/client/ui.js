@@ -1,4 +1,5 @@
-define("game/client/ui.js",[],
+define("game/client/ui.js",
+	["//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"],
 	// content
 	function () {
 		return new function() {
