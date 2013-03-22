@@ -131,14 +131,17 @@ define("game/game.js",
 				if(this.outsideLine({x:50, y:0},{x:0, y:25}, local )){
 					yIso--; // 1 up, left
 					//console.log("correction applied 1");
-				}else if(this.outsideLine({x:0, y:25},{x:50, y:50}, local)){
+				}
+				if(this.outsideLine({x:0, y:25},{x:50, y:50}, local)){
 					xIso++; // 1 down, left
 					//console.log("correction applied 2");
-				}else if(this.outsideLine({x:50, y:50},{x:100, y:25}, local)){
+				}
+				if(this.outsideLine({x:50, y:50},{x:100, y:25}, local)){
 					yIso++; // 1 up, right
 					//console.log("correction applied 3");
 
-				}else if(this.outsideLine({x:100, y:25},{x:50, y:0}, local)){
+				}
+				if(this.outsideLine({x:100, y:25},{x:50, y:0}, local)){
 					xIso--; // 1 down, right
 					//console.log("correction applied 4");
 				}
@@ -210,6 +213,9 @@ define("game/game.js",
 					console.log("game loaded");
 					this.map.load(store.get('map'));
 				}
+			}
+			this.new_game = function(){
+				this.map.new(50,50);
 			}
 		}		
 	}
