@@ -5,7 +5,7 @@ Written by Carl Saggs
 Uses:
 	Sprite.js - https://github.com/batiste/sprite.js
 	Require.js - http://requirejs.org/
-	Bootstrap -
+	Bootstrap - http://twitter.github.com/bootstrap
 	store.js - https://github.com/marcuswestin/store.js
 
 

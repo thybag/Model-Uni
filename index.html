@@ -16,12 +16,36 @@
 	    .ui-element {
 	    	z-index:999;
 	    	position:absolute;
-	    	
 	    }
-	    .ui-element .dropdown-submenu > a:after {
-	    	content: "";
-	    	border-left: none;
+
+	    .ui-element .dropdown-menu .cost{
+	    	float:right;
+	    	font-size:0.8em;
 	    }
+	    .slidedown-menu {
+	    	display:none;
+	    	background: #f6f6f6;
+	    	margin:0;
+	    	padding-left:5px;
+	    	list-style:none;
+
+
+	    }
+	    .slidedown-menu>li>a {
+	    	display: block;
+	    	padding: 3px 20px;
+	    	clear: both;
+			font-weight: normal;
+			line-height: 20px;
+			color:#333;
+	    }
+	    .slidedown-menu>li>a:hover,.slidedown-menu>li.active>a  {
+	    	text-decoration: none;
+	    	background-color: #0081c2;
+	    	color:#fff;
+	    }
+
+
 	</style>
 
 	

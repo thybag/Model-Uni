@@ -11,11 +11,13 @@ define("game/client/ui.js",
 				var fragment = document.createElement('div');
 				fragment.innerHTML = html;
 				template_fragments = fragment;
-
 			});
 
 			this.showMenu = function(){
-				var mnu = this.getFragment("ui_build_menu");
+				this.createBuildMenu();
+
+
+				/*
 				mnu.find('a').click(function(){
 					//unselect
 					mnu.find('li').removeClass('active');
@@ -27,7 +29,30 @@ define("game/client/ui.js",
 					if(typeof tile != 'undefined') game.client.selected_tile = tile;
 
 				})
-				mnu.show();
+				mnu.show();*/
+			}
+
+			this.createBuildMenu = function(){
+				var menu = this.getFragment("ui_build_menu");
+				menu.find(".slidedown-submenu>a").click(function(){
+					$(this).parent().children(".slidedown-menu").slideToggle();
+				});
+
+				var options = menu.find('.slidedown-menu a, .action a');
+
+				options.click(function(){
+
+					var tile = $(this).attr('data-tile');
+
+					if(typeof tile !== 'undefined'){
+						options.parent().removeClass('active');
+						$(this).parent().addClass('active');
+
+						game.client.selected_tile = tile;
+					}
+				});
+
+				menu.show();
 			}
 
 			this.getFragment = function(name){
