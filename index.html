@@ -12,7 +12,19 @@
 	        margin:0;
 	    }
 	    .navbar,.navbar-inner {margin:0px; border-radius:0px;}
+	    .ui-element {
+	    	z-index:999;
+	    	position:absolute;
+	    	
+	    }
+	    .ui-element .dropdown-submenu > a:after {
+	    	content: "";
+	    	border-left: none;
+	    }
 	</style>
+
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="vendor/require.js"></script>
 	<script src="game/bootstrap.js"></script>
 </head>

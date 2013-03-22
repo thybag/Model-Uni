@@ -11,8 +11,8 @@ function () {
 		},
 
 
-		'lot_w' : {"img": 'assets/tiles/lotW.png',"type": 'road'},
-		'lot_e'   : {"img": 'assets/tiles/lotE.png', type: 'road'},
+		'lot_w' : {"img": 'assets/tiles/lotW.png',"type": 'big_road'},
+		'lot_e'   : {"img": 'assets/tiles/lotE.png', type: 'big_road'},
 
 		'road_ew' : {"img": 'assets/tiles/roadEW.png', type: 'road'},
 		'road_ns' : {"img": 'assets/tiles/roadNS.png', type: 'road'},
@@ -89,6 +89,24 @@ function () {
 				
 				// no joins
 				return "road_end";
+			}
+		},
+		'big_road': {
+			"img": 'assets/tiles/road.png',
+			"type": 'bigroad',
+			"findTile": function(left, top, right, bottom){
+				/*
+				var join_left = false, 
+					join_top = false, 
+					join_right = false, 
+					join_bottom = false;
+					// find surrouinding types
+					if(tiles[left].type == "road"){join_left = true;}
+					if(tiles[top].type == "road"){join_top = true;}
+					if(tiles[right].type == "road"){join_right = true;}
+					if(tiles[bottom].type == "road"){join_bottom = true;}
+				*/
+				return false;
 			}
 		}
 	}

@@ -44,7 +44,7 @@ define("game/map/map.js",
 					if(typeof tiledata.findTile !== 'undefined'){
 						
 						tile = tiledata.findTile(this.map[x+1][y], this.map[x][y-1], this.map[x-1][y] , this.map[x][y+1])
-					
+						if(tile == false)return;
 					}else{
 						//  no change?
 						tile = new_tile;

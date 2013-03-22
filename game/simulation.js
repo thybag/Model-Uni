@@ -3,14 +3,22 @@ define("game/simulation.js",
 	// dependencies
 	[
 		'game/map/map.js',
+		'game/client/ui.js',
 		'game/client/viewport.js'
 	],
 	// content
-	function (map) {
+	function (map, ui) {
 		return new function() {	
 
 			// Load viewport
 			this.viewport = require("game/client/viewport.js");
+
+			this.client = new function(){
+				this.selected_tile = 'road';
+
+			}
+
+			this.ui = ui;
 
 			// actors (live stuff)
 			this.entities = [];
@@ -58,6 +66,8 @@ define("game/simulation.js",
 					here.scaleWorld(game.viewport.scale);
 
 				}, false);
+
+				ui.showMenu();
 
 			}
 
@@ -177,6 +187,7 @@ define("game/simulation.js",
 			}
 
 
+			var disable_scroll = false;
 
 			this.render = function(){
 				var mouse = this.inputs.mouse.position;
@@ -191,21 +202,28 @@ define("game/simulation.js",
 				
 				if(this.inputs.mousedown) {
 					tile = this.findTileAt(mouse.x, mouse.y);
-					this.map.updateTile(tile.x, tile.y, 'road');
+				
+					this.map.updateTile(tile.x, tile.y, this.client.selected_tile);
 					this.viewport.dirty = true;
 				}
 
-				if(mouse.x < edge_boundry && !(mouse.x < 1)){
-					this.viewport.x += 4;
+				$(".ui-element").hover(function(){
+					disable_scroll = true;
+				},function(){
+					disable_scroll = false;
+				});
+
+				if(mouse.x < edge_boundry && !(mouse.x < 1) && !disable_scroll){
+					this.viewport.x += 5;
 				} 
-				if(mouse.x > client.w-edge_boundry && !(mouse.x > client.w-3)){
-					this.viewport.x -= 4;
+				if(mouse.x > client.w-edge_boundry && !(mouse.x > client.w-3) && !disable_scroll){
+					this.viewport.x -= 5;
 				}
-				if(mouse.y < edge_boundry && !(mouse.y < 1)){
-					this.viewport.y += 4;
+				if(mouse.y < edge_boundry && !(mouse.y < 1) && !disable_scroll){
+					this.viewport.y += 5;
 				} 
-				if(mouse.y > client.h-edge_boundry && !(mouse.y > client.h-3)){
-					this.viewport.y -= 4;
+				if(mouse.y > client.h-edge_boundry-40 && !(mouse.y > client.h-3) && !disable_scroll){
+					this.viewport.y -= 5;
 				}
 
 				if(this.viewport.is_dirty()){
