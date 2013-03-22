@@ -10,8 +10,15 @@ function () {
 			"type": "grass"
 		},
 
-		'lot_w' : {"img": 'assets/tiles/lotW.png',"type": 'big_road'},
-		'lot_e'   : {"img": 'assets/tiles/lotE.png', type: 'big_road'},
+		'lot_w' : {"img": 'assets/tiles/lotW.png',"type": 'big_road', "editable": false},
+		'lot_e'   : {"img": 'assets/tiles/lotE.png', "type": 'big_road', "editable": false},
+		'lot_n'   : {"img": 'assets/tiles/lotN.png', "type": 'big_road', "editable": false},
+		'lot_s'   : {"img": 'assets/tiles/lotS.png', "type": 'big_road', "editable": false},
+
+		'lot_exit_n'   : {"img": 'assets/tiles/exitN.png', type: 'big_road', "editable": false},
+		'lot_exit_e'   : {"img": 'assets/tiles/exitE.png', type: 'big_road', "editable": false},
+		'lot_exit_s'   : {"img": 'assets/tiles/exitS.png', type: 'big_road', "editable": false},
+		'lot_exit_w'   : {"img": 'assets/tiles/exitW.png', type: 'big_road', "editable": false},
 
 		'road_ew' : {"img": 'assets/tiles/roadEW.png', type: 'road'},
 		'road_ns' : {"img": 'assets/tiles/roadNS.png', type: 'road'},
@@ -44,20 +51,12 @@ function () {
 			"listeners": {},
 			"findTile": function(left, top, right, bottom){
 
-				var join_left = false, join_top = false, join_right = false, join_bottom = false;
+				var join_left 	= 	(tiles[left].type == "road" || tiles[left].type == "big_road" ),
+				 	join_top 		= 	(tiles[top].type == "road" || tiles[top].type == "big_road"),
+				 	join_right 	= 	(tiles[right].type == "road" || tiles[right].type == "big_road"),
+				 	join_bottom 	= 	(tiles[bottom].type == "road" || tiles[bottom].type == "big_road");
+
 				// find surrouinding types
-				if(tiles[left].type == "road"){
-					join_left = true;
-				}
-				if(tiles[top].type == "road"){
-					join_top = true;
-				}
-				if(tiles[right].type == "road"){
-					join_right = true;
-				}
-				if(tiles[bottom].type == "road"){
-					join_bottom = true;
-				}
 
 				// Depending on join
 
@@ -73,10 +72,10 @@ function () {
 				// both ends (straight)
 				if(join_top && join_bottom) return "road_ns";
 				if(join_left && join_right)	return "road_ew";
+
 				// 2 ends (corner)
 				if(join_top && join_left) return "road_corner_nw";
 				if(join_top && join_right) return "road_corner_ne";
-
 				if(join_bottom && join_left)return "road_corner_sw";
 				if(join_bottom && join_right) return "road_corner_es";
 
@@ -94,18 +93,21 @@ function () {
 			"img": 'assets/tiles/road.png',
 			"type": 'bigroad',
 			"findTile": function(left, top, right, bottom){
-				/*
-				var join_left = false, 
-					join_top = false, 
-					join_right = false, 
-					join_bottom = false;
-					// find surrouinding types
-					if(tiles[left].type == "road"){join_left = true;}
-					if(tiles[top].type == "road"){join_top = true;}
-					if(tiles[right].type == "road"){join_right = true;}
-					if(tiles[bottom].type == "road"){join_bottom = true;}
-				*/
-				return false;
+
+				var join_left 	= 	(tiles[left].type == "road"),
+				 	join_top 		= 	(tiles[top].type == "road"),
+				 	join_right 	= 	(tiles[right].type == "road"),
+				 	join_bottom 	= 	(tiles[bottom].type == "road");
+
+					if(join_left)	return "lot_exit_w";
+					if(join_right)	return "lot_exit_e";
+					if(join_top)	return "lot_exit_n";
+					if(join_bottom)	return "lot_exit_s";
+
+					if(tiles[left].type == 'big_road')return "lot_e";
+					if(tiles[right].type == 'big_road')return "lot_w";
+
+					return false;
 			}
 		}
 	}

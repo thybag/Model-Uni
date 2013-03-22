@@ -33,6 +33,9 @@ define("game/map/map.js",
 
 					original_tile = this.map[x][y];
 
+					// cannot place tiles on none-editable tiles 
+					if(this.tiles[original_tile].editable === false && typeof new_tile != "undefined") return;
+
 					// if new tile not provided, use current value
 					if(typeof new_tile == "undefined"){
 						new_tile = original_tile;
