@@ -12,7 +12,6 @@ define("game/game.js",
 		'game/client/viewport.js',
 		'game/client/renderer.js'	
 	],
-	// content
 	function (map, ui) {
 		return new function() {	
 
@@ -43,9 +42,12 @@ define("game/game.js",
 			 */
 			this.__construct = function(){
 
+				// Generate new MAP
 				this.map = map.new(50,50);
-				// inputs
+
+				// connect inputs
 				this.inputs = this.scene.Input();
+
 				// Setup render
 				this.renderer.init(this.viewport, this.map, this.world);
 
@@ -67,19 +69,21 @@ define("game/game.js",
 
 				}, false);
 
+				// Show build Menu
 				ui.showMenu();
-
 			}
 			
-
-
+			/** 
+			 * tick: Called each time game loop runs
+			 * checks inputs, then runs simulaton logic & render
+			 */
 			this.tick = function(){ 
 				this.check_inputs();
-				this.run();
+				//this.sim.run();
 				this.renderer.tick();
 			}
 
-
+			// Convert tile X/Y to real position (in pix)
 			this.findTileCoords = function (x, y){
 				var tile_prop = this.map.tile_propeties;
 				// Find top left corner of tile given its map coords
@@ -89,6 +93,8 @@ define("game/game.js",
 				return {x: real_x, y: real_y};
 
 			} 
+
+			// Detect which tile a particular point is in.
 			this.findTileAt = function(x, y){
 				//http://stackoverflow.com/questions/10768865/isometry-incorrect-coordinates-from-mouse-pos-tile-coords-formula
 				
@@ -134,6 +140,7 @@ define("game/game.js",
 				return {"x": xIso, "y": yIso, "px_x": tile_real.x, "px_y":tile_real.y}
 
 			}
+			// Is point outside of line(a:b)
 			this.outsideLine = function(a,b,c){
 				return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
 			}
@@ -176,13 +183,6 @@ define("game/game.js",
 					this.viewport.y -= 5;
 				}
 			}
-
-			this.run = function(){
-				/*
-				
-				*/
-			}
-
 		};
 	}
 );

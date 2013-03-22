@@ -29,9 +29,6 @@ define("game/client/ui.js",[],
 				mnu.show();
 			}
 
-
-
-
 			this.getFragment = function(name){
 
 				if(typeof fragments[name] === 'undefined'){

@@ -10,21 +10,25 @@ define("game/client/renderer.js",[],
 		this.tile_cache = {};
 
 		this.init = function(viewport, map, world){
+			// Keep a local copy of these values
 			this.map = map;
 			this.viewport = viewport;
 			this.world = world ;
 
-			console.log(viewport);
-			console.log(this.world);
-			// populate tile cache
+			// cache all tiles as sprites
 			for(tile in this.map.tiles){
 				this.tile_cache[tile] = this.world.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
 			}
+			// Add selector tile
 			this.tile_cache['selector'] = this.world.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
-
-			this.viewport.dirty = true; // inital draw
+			// Set viewport as dirty to trigger inital draw
+			this.viewport.dirty = true; 
 		}
 
+		/** 
+		 * tick: Called each time game loop runs
+		 * checks if viewport is dirty (changes to be drawn) and draws world if so.
+		 */
 		this.tick = function(){
 
 			if(this.viewport.is_dirty()){
@@ -33,7 +37,12 @@ define("game/client/renderer.js",[],
 				this.viewport.clean();
 			}
 		}
-
+		/** 
+		 * paintWorld
+		 * re-paints current isometric world to the screen
+		 *
+		 * @todo Optimize this by not bothering to paint offscreen portions
+		 */
 		this.paintWorld = function(){
 			
 			var map = this.map;
@@ -57,7 +66,7 @@ define("game/client/renderer.js",[],
 				tile_x = (-tile_prop.hw * (y+1)) + offset_x;
 				tile_y = (tile_prop.hh * (y+1)) +  offset_y;
 			}
-
+			// redraw selector
 			this.paintSelector();
 		}
 

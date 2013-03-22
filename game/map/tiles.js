@@ -10,7 +10,6 @@ function () {
 			"type": "grass"
 		},
 
-
 		'lot_w' : {"img": 'assets/tiles/lotW.png',"type": 'big_road'},
 		'lot_e'   : {"img": 'assets/tiles/lotE.png', type: 'big_road'},
 
