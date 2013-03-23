@@ -13,6 +13,7 @@ define("game/client/renderer.js",[],
 		this.scene = null;
 		this.viewport = null;
 		this.map = null;
+		this.building_config = null;
 		// Cache of tile sprites
 		this.layers = {}
 		this.sprite_cache = {};
@@ -30,6 +31,7 @@ define("game/client/renderer.js",[],
 			this.map = map;
 			this.viewport = viewport;
 			this.scene = scene;
+			this.buildings_config = buildings_config;
 
 			this.layers.world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
 
@@ -57,7 +59,6 @@ define("game/client/renderer.js",[],
 			if(this.viewport.is_dirty()){
 				//redraw world if its dirty
 				this.paintWorld();
-				this.paintStructures();
 				this.viewport.clean();
 			}
 		}
@@ -84,13 +85,15 @@ define("game/client/renderer.js",[],
 			for (var y = 0; y < map.h; y++) {
 				for (var x = 0; x < map.w; x++) {
 					current_tile = map.map[y][x];
-
+					//draw tile
 					this.sprite_cache[current_tile].position(tile_x, tile_y-(this.sprite_cache[current_tile].h % 65)).canvasUpdate(world);
-		 		 	
+		 		 	//draw structure
 					if(typeof map.structure_map[y][x] != 'undefined' && map.structure_map[y][x] != null){
 						structure_name = map.structure_map[y][x];
-						this.sprite_cache[structure_name].position(tile_x, tile_y-tile_prop.h).canvasUpdate(this.layers.world);
-						console.log("!");
+						cfg = this.buildings_config[structure_name];
+						sprite = this.sprite_cache[structure_name];
+
+						this.sprite_cache[structure_name].position(tile_x-((cfg.w-1)*tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.world);
 					}
 
 		 		 	tile_x += tile_prop.hw;
@@ -103,20 +106,6 @@ define("game/client/renderer.js",[],
 			this.paintSelector();
 		}
 
-		this.paintStructures = function(){
-			/*
-			buildings = this.map.entities.buildings;
-
-			for(var i=0; i< buildings.length; i++){
-				structure = buildings[i];
-
-				pos = game.findTileCoords(structure.x, structure.y);
-				// /structure% 65
-				pos.y = pos.y - this.map.tile_propeties.h;
-				this.sprite_cache[structure.name].position(pos.x, pos.y).canvasUpdate(this.layers.world);
-			}
-			*/
-		}
 		/**
 		 * Draw selector on to canvas
 		 * selector indicates which tile user is hovering on

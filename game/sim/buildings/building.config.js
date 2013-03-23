@@ -23,7 +23,11 @@ function () {
 		},
 		// Example (modifiers apply to those in building, per hour?)
 		'gym' : {
-						"img": '', 
+						"h":2,
+						"w":2,
+
+						"img": 'assets/buildings/gym.png', 
+
 						"type": "gym",
 						"capacity": 40,
 						"running_costs": 900,

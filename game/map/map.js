@@ -45,13 +45,14 @@ function (gen, tiles) {
 			x = building.x;
 			this.structure_map[x][y] = building.name;
 
-			_y = y+building.h;
-			_x = x+building.w;
+			_y = y-(building.h-1);
+			_x = x-(building.w-1);
 
-			for(y; y < _y; y++)
-				for(x; x < _x; x++)
-					this.updateTile(x, y,"structure", true);
-			
+			for(y; y >= _y; y--){
+				for(tmp_x = x; tmp_x >= _x; tmp_x--){
+					this.updateTile(tmp_x, y,"structure", true);
+				}
+			}	
 		}
 
 		this.tileAt = function(x, y){
