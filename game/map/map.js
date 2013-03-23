@@ -19,7 +19,7 @@ function (gen, tiles) {
 		// Terrain map
 		this.map = [];
 		// structure map
-		this.entities = null;
+		this.structure_map = [];
 
 		// tile
 		this.tiles = tiles;
@@ -32,6 +32,7 @@ function (gen, tiles) {
 			this.w = w;
 			this.h = h;
 			this.map = gen.createMap(w,h);
+			this.structure_map = gen.emptyMap(w,h);
 			this.structures 
 			return this;
 		}
@@ -42,6 +43,8 @@ function (gen, tiles) {
 
 			y = building.y;
 			x = building.x;
+			this.structure_map[x][y] = building.name;
+
 			_y = y+building.h;
 			_x = x+building.w;
 
@@ -52,7 +55,11 @@ function (gen, tiles) {
 		}
 
 		this.tileAt = function(x, y){
-			return this.map[x][y];
+			if(x>0 && x < (this.w-1) && y>0 && y < (this.h-1) ){
+				return this.map[x][y];
+			}else{
+				return false;
+			}
 		}
 
 		this.removeBuilding = function(building){
@@ -106,10 +113,18 @@ function (gen, tiles) {
 			this.w = data.w;
 			this.h = data.h;
 			this.map = data.map;
+
+			// Allow saved maps to still work (@todo remove me)
+			if(typeof data.structure_map == 'undefined'){
+				this.structure_map = gen.emptyMap(this.w,this.h);
+			}else{
+				this.structure_map = data.structure_map;
+			}
+			
 		}
 		// generate data to save a map
 		this.forSave = function(){
-			return {"w": this.w, "h": this.h, "map" : this.map};
+			return {"w": this.w, "h": this.h, "map" : this.map, "structure_map": this.structure_map};
 		}	
 	}
 });

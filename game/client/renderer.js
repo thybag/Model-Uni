@@ -53,11 +53,12 @@ define("game/client/renderer.js",[],
 		 * checks if viewport is dirty (changes to be drawn) and draws world if so.
 		 */
 		this.tick = function(){
-
+			console.log()
 			if(this.viewport.is_dirty()){
 				//redraw world if its dirty
 				this.paintWorld();
 				this.paintStructures();
+				this.viewport.clean();
 			}
 		}
 		/** 
@@ -85,6 +86,13 @@ define("game/client/renderer.js",[],
 					current_tile = map.map[y][x];
 
 					this.sprite_cache[current_tile].position(tile_x, tile_y-(this.sprite_cache[current_tile].h % 65)).canvasUpdate(world);
+		 		 	
+					if(typeof map.structure_map[y][x] != 'undefined' && map.structure_map[y][x] != null){
+						structure_name = map.structure_map[y][x];
+						this.sprite_cache[structure_name].position(tile_x, tile_y-tile_prop.h).canvasUpdate(this.layers.world);
+						console.log("!");
+					}
+
 		 		 	tile_x += tile_prop.hw;
 		 		 	tile_y += tile_prop.hh;
 				}
@@ -96,6 +104,7 @@ define("game/client/renderer.js",[],
 		}
 
 		this.paintStructures = function(){
+			/*
 			buildings = this.map.entities.buildings;
 
 			for(var i=0; i< buildings.length; i++){
@@ -106,6 +115,7 @@ define("game/client/renderer.js",[],
 				pos.y = pos.y - this.map.tile_propeties.h;
 				this.sprite_cache[structure.name].position(pos.x, pos.y).canvasUpdate(this.layers.world);
 			}
+			*/
 		}
 		/**
 		 * Draw selector on to canvas

@@ -20,7 +20,7 @@ define("game/map/map.generator.js",
 			this.createMap = function(w,h){
 
 				// Empty map array
-				map = [];
+				var map = [];
 				// Create each tile
 				for(var y=0; y<h;y++){
 					for(var x=0; x<w;x++){
@@ -41,6 +41,14 @@ define("game/map/map.generator.js",
 					map[2][y] = "lot_w";	
 				}
 				
+				return map;
+			}
+
+			this.emptyMap = function(w,h){
+				var map = [];
+				for(var y=0; y<h;y++){
+					map[y] = new Array(w);
+				}
 				return map;
 			}
 		}

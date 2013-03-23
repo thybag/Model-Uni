@@ -47,8 +47,6 @@ define("game/game.js",
 				}else{
 					this.map = map.new(50,50);
 				}
-				// Give map access to entities
-				this.map.entities = this.sim.entities;
 				
 				// connect inputs
 				this.inputs = this.scene.Input();
