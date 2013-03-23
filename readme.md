@@ -12,6 +12,7 @@ Model-Uni is written in JavaScript and is built using a vareity of open source p
 * Sprite.js - https://github.com/batiste/sprite.js
 * Require.js - http://requirejs.org/
 * Bootstrap - http://twitter.github.com/bootstrap
+* jQuery - http://jquery.com/
 * store.js - https://github.com/marcuswestin/store.js
 * Tile set from: Kenney.nl via http://opengameart.org/content/isometric-road-tiles-nova (CC-BY 3)
 
