@@ -43,17 +43,49 @@ function (gen, tiles) {
 
 			y = building.y;
 			x = building.x;
-			this.structure_map[x][y] = building.name;
-
+			// Find building constraints
 			_y = y-(building.h-1);
 			_x = x-(building.w-1);
 
-			for(y; y >= _y; y--){
+			// Set structure to map & add reverse references to structure_map
+			for(tmp_y = y; tmp_y >= _y; tmp_y--){
 				for(tmp_x = x; tmp_x >= _x; tmp_x--){
-					this.updateTile(tmp_x, y,"structure", true);
+
+					this.updateTile(tmp_x, tmp_y,"structure", true);
+					this.structure_map[tmp_x][tmp_y] = {"id": building.id}
 				}
 			}	
+			this.structure_map[x][y] = {"id": building.id, "sprite": building.name};
+
 		}
+
+		this.removeBuilding = function(building){
+
+			y = building.y;
+			x = building.x;
+			// Find building constraints
+			_y = y-(building.h-1);
+			_x = x-(building.w-1);
+
+			for(tmp_y = y; tmp_y >= _y; tmp_y--){
+				for(tmp_x = x; tmp_x >= _x; tmp_x--){
+					this.updateTile(tmp_x, tmp_y, "grass", true);
+					this.structure_map[tmp_x][tmp_y] = null;
+				}
+			}	
+			console.log(x + ' ' +y);
+		}
+
+
+		this.buildingAt = function(x, y){
+			if(x>0 && x < (this.w-1) && y>0 && y < (this.h-1) ){
+				if(this.map[x][y] == 'structure'){
+					return this.structure_map[x][y];
+				}	
+			}
+			return false;
+		}
+
 
 		this.tileAt = function(x, y){
 			if(x>0 && x < (this.w-1) && y>0 && y < (this.h-1) ){
@@ -67,9 +99,6 @@ function (gen, tiles) {
 			var tile = this.tileAt(x, y);
 			// tile is free, if it both exists an is grass
 			return (tile !== false && tile == 'grass');
-		}
-
-		this.removeBuilding = function(building){
 		}
 
 

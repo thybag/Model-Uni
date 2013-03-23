@@ -209,6 +209,23 @@ define("game/game.js",
 							var selection = this.map.tileAt(selected_tile.x, selected_tile.y);
 							if(selection == 'structure'){
 
+								// get building details
+								structure = this.map.buildingAt(selected_tile.x, selected_tile.y);
+								building = this.sim.entities.buildings[structure.id];
+
+								// Remove from map
+								this.map.removeBuilding(building);
+
+								// Remove from entities
+								this.sim.entities.buildings[structure.id]= null;
+
+								//console.log(this.sim.entities.buildings);
+								//console.log("buidling cleared");
+
+								//this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
+
+
+
 							}else{
 								this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
 							}
@@ -247,7 +264,12 @@ define("game/game.js",
 			// Save map (single save currently)
 			this.save_game = function(){
 				if(window.store.enabled){
-					store.set('map', this.map.forSave())
+
+					tmp = {};
+					tmp.mapdata = this.map.forSave();
+					tmp.entities = this.sim.entities;
+
+					store.set('map', tmp);
 					console.log("game saved");
 				}else{
 					alert("unable to save!");
@@ -262,7 +284,10 @@ define("game/game.js",
 			this.load_game = function(){
 				if(window.store.enabled){
 					console.log("game loaded");
-					this.map.load(store.get('map'));
+
+					tmp = store.get('map');
+					this.map.load(tmp.mapdata);
+					this.sim.load(tmp.entities);
 				}
 			}
 			this.new_game = function(){

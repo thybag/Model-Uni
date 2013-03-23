@@ -89,11 +89,14 @@ define("game/client/renderer.js",[],
 					this.sprite_cache[current_tile].position(tile_x, tile_y-(this.sprite_cache[current_tile].h % 65)).canvasUpdate(world);
 		 		 	//draw structure
 					if(typeof map.structure_map[y][x] != 'undefined' && map.structure_map[y][x] != null){
-						structure_name = map.structure_map[y][x];
-						cfg = this.buildings_config[structure_name];
-						sprite = this.sprite_cache[structure_name];
 
-						this.sprite_cache[structure_name].position(tile_x-((cfg.w-1)*tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.world);
+						if(typeof  map.structure_map[y][x].sprite !== 'undefined'){
+							structure_name = map.structure_map[y][x].sprite;
+							cfg = this.buildings_config[structure_name];
+							sprite = this.sprite_cache[structure_name];
+
+							this.sprite_cache[structure_name].position(tile_x-((cfg.w-1)*tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.world);
+						}
 					}
 
 		 		 	tile_x += tile_prop.hw;

@@ -28,12 +28,25 @@ function (building_config) {
 
 			// can we afford?
 			building = new this.blank_building(x, y, type, cfg);
-
+			// store id & add to entities
+			building.id = this.entities.buildings.length;
 			this.entities.buildings.push(building);
 
 			return building;
 		}
-		this.getBuildingAt = function(x, y){}
+		
+		this.load = function(entity_data){
+			for(itm in entity_data.buildings){
 
+				val = null;
+				if(entity_data.buildings[itm] != null){
+					// Rebuild entity object
+					tmp = entity_data.buildings[itm];
+					val = new this.blank_building(tmp.x, tmp.y, tmp.name, tmp);
+
+				}
+				this.entities.buildings.push(val);
+			}
+		}
 	}
 });
