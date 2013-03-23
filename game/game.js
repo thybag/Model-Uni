@@ -55,7 +55,7 @@ define("game/game.js",
 				this.inputs = this.scene.Input();
 
 				// Setup render
-				this.renderer.init(this.viewport, this.map, this.world);
+				this.renderer.init(this.viewport, this.map, this.scene);
 
 				// make scalable
 				document.addEventListener('mousewheel', function(e){
@@ -86,8 +86,8 @@ define("game/game.js",
 					canvas_width = new_width / game.viewport.scale;
 
 					// Update game
-					game.world.scene.w = new_width;
-					game.world.scene.h = new_height;
+					game.scene.w = new_width;
+					game.scene.h = new_height;
 					// update canvas's
 					canvas = $("canvas").attr("width",canvas_width).attr("height",canvas_height);
 					// And canvas parent..

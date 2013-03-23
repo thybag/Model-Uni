@@ -8,11 +8,13 @@ define("game/client/renderer.js",[],
 	function () {
 		return new function() {
 
+		
 		// Required vars
-		this.world = null;
+		this.scene = null;
 		this.viewport = null;
 		this.map = null;
 		// Cache of tile sprites
+		this.layers = {}
 		this.tile_cache = {};
 
 		/**
@@ -21,20 +23,24 @@ define("game/client/renderer.js",[],
 		 *
 		 * @param viewport - ref to game viewport
 		 * @param map - ref to game map
-		 * @param world - ref to world canvas (@todo switch to layers object)
+		 * @param scene - ref to scene
 		 */
-		this.init = function(viewport, map, world){
+		this.init = function(viewport, map, scene){
 			// Keep a local copy of these values
 			this.map = map;
 			this.viewport = viewport;
-			this.world = world ;
+			this.scene = scene;
+
+			this.layers.world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
+	//var players = scene.Layer("players",  {"useCanvas":true, "autoClear":false});
+	//var ui = scene.Layer("ui",  {"useCanvas":true, "autoClear":true});
 
 			// cache all tiles as sprites
 			for(tile in this.map.tiles){
-				this.tile_cache[tile] = this.world.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
+				this.tile_cache[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
 			}
 			// Add selector tile
-			this.tile_cache['selector'] = this.world.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
+			this.tile_cache['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
 			// Set viewport as dirty to trigger inital draw
 			this.viewport.dirty = true; 
 		}
@@ -61,19 +67,21 @@ define("game/client/renderer.js",[],
 			
 			var map = this.map;
 			var tile_prop = map.tile_propeties;
+
+			var world = this.layers.world;
 			// Apply offsets
 			var tile_x = offset_x = this.viewport.x;
 			var tile_y = offset_y = this.viewport.y;
 			//ref to current tile
 			var current_tile;
 
-			this.world.clear();
+			world.clear();
 
 			for (var y = 0; y < map.h; y++) {
 				for (var x = 0; x < map.w; x++) {
 					current_tile = map.map[y][x];
 
-					this.tile_cache[current_tile].position(tile_x, tile_y-(this.tile_cache[current_tile].h % 65)).canvasUpdate(this.world);
+					this.tile_cache[current_tile].position(tile_x, tile_y-(this.tile_cache[current_tile].h % 65)).canvasUpdate(world);
 		 		 	tile_x += tile_prop.hw;
 		 		 	tile_y += tile_prop.hh;
 				}
@@ -91,7 +99,7 @@ define("game/client/renderer.js",[],
 		this.paintSelector = function(){
 			//selected_tile
 			s = game.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y)
-			this.tile_cache["selector"].position(s.x, s.y).canvasUpdate(this.world);
+			this.tile_cache["selector"].position(s.x, s.y).canvasUpdate(this.layers.world);
 		}
 		/**
 		 * Scale canvas 
