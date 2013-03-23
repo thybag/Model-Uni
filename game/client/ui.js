@@ -50,6 +50,7 @@ function () {
 
 				var tile = $(this).attr('data-tile');
 				var building = $(this).attr('data-building');
+				var demolish = $(this).attr('data-demolish');
 				// Select a tile
 				if(typeof tile !== 'undefined'){
 					options.parent().removeClass('active');
@@ -65,9 +66,15 @@ function () {
 
 					game.user.selection_type = 'building';
 					game.user.selected = building;
+				}else if(typeof demolish !== 'undefined'){
+
+					options.parent().removeClass('active');
+					$(this).parent().addClass('active');
+					// demolish mode!
+					game.user.selection_type = 'demolish';
+					game.user.selected = "grass";
 				}
 			});
-
 			menu.show();
 		}
 

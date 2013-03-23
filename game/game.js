@@ -180,26 +180,41 @@ define("game/game.js",
 				var edge_boundry = 50;
 				
 				var selected_tile = this.findTileAt(mouse.x, mouse.y);
+
+				// Show curosr
 				if(this.viewport.selected_tile.x != selected_tile.x || this.viewport.selected_tile.y != selected_tile.y){
 					this.viewport.selected_tile = selected_tile;
     				this.viewport.dirty = true;
 				}
 				
 				if(this.inputs.mousedown) {
-					if(this.user.selection_type == 'tile'){
-						this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
-					}else if(this.user.selection_type == 'building'){
 
-						if(this.map.tileAt(selected_tile.x, selected_tile.y) != 'structure'){
+					// If tile is clear
+					if(this.map.isTileClear(selected_tile.x, selected_tile.y)){
+
+						if(this.user.selection_type == 'tile'){
+							// if tile, attempt to place
+							this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
+							this.viewport.dirty = true;
+						}else if(this.user.selection_type == 'building'){
 							var build = this.sim.createBuilding(selected_tile.x, selected_tile.y, this.user.selected);
 							this.map.placeBuilding(build);
-						}else{
-							console.log("space in use");
+							this.viewport.dirty = true;
 						}
-						
+
+					}else{	
+						// cant build here - but if we are demolishing
+						if(this.user.selection_type == 'demolish'){
+
+							var selection = this.map.tileAt(selected_tile.x, selected_tile.y);
+							if(selection == 'structure'){
+
+							}else{
+								this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
+							}
+							this.viewport.dirty = true;
+						}
 					}
-					
-					this.viewport.dirty = true;
 				}
 
 				$(".game-ui").hover(function(){

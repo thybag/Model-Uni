@@ -63,6 +63,12 @@ function (gen, tiles) {
 			}
 		}
 
+		this.isTileClear = function(x, y){
+			var tile = this.tileAt(x, y);
+			// tile is free, if it both exists an is grass
+			return (tile !== false && tile == 'grass');
+		}
+
 		this.removeBuilding = function(building){
 		}
 
