@@ -49,12 +49,22 @@ function () {
 			options.click(function(){
 
 				var tile = $(this).attr('data-tile');
-
+				var building = $(this).attr('data-building');
+				// Select a tile
 				if(typeof tile !== 'undefined'){
 					options.parent().removeClass('active');
 					$(this).parent().addClass('active');
 
-					game.client.selected_tile = tile;
+					game.user.selection_type = 'tile';
+					game.user.selected = tile;
+				}
+				// Select a building
+				else if(typeof building !== 'undefined'){
+					options.parent().removeClass('active');
+					$(this).parent().addClass('active');
+
+					game.user.selection_type = 'building';
+					game.user.selected = building;
 				}
 			});
 

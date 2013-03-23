@@ -10,6 +10,7 @@ define("game/game.js",
 		'game/map/map.js',
 		'game/client/ui.js',
 		'game/client/viewport.js',
+		'game/client/user.js',
 		'game/client/renderer.js',
 		'game/sim/simulation.js'	
 	],
@@ -20,14 +21,10 @@ define("game/game.js",
 			this.viewport = require("game/client/viewport.js");
 			// Load render
 			this.renderer = require("game/client/renderer.js");
-			// Load "client"
-			this.client = new function(){
-				this.selected_tile = 'road';
-			}
-
+			// Load "user"
+			this.user = require("game/client/user.js"); 
 			// Set UI
 			this.ui =  require("game/client/ui.js");
-
 			// actors (live stuff)
 			this.sim =  require("game/sim/simulation.js");
 
@@ -183,15 +180,26 @@ define("game/game.js",
 				var client = this.scene;
 				var edge_boundry = 50;
 				
-				tt = this.findTileAt(mouse.x,mouse.y);
-				if(this.viewport.selected_tile.x != tt.x || this.viewport.selected_tile.y != tt.y){
-					this.viewport.selected_tile = tt;
+				var selected_tile = this.findTileAt(mouse.x, mouse.y);
+				if(this.viewport.selected_tile.x != selected_tile.x || this.viewport.selected_tile.y != selected_tile.y){
+					this.viewport.selected_tile = selected_tile;
     				this.viewport.dirty = true;
 				}
 				
 				if(this.inputs.mousedown) {
-					tile = this.findTileAt(mouse.x, mouse.y);
-					this.map.updateTile(tile.x, tile.y, this.client.selected_tile);
+					if(this.user.selection_type == 'tile'){
+						this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
+					}else if(this.user.selection_type == 'building'){
+
+						if(this.map.tileAt(selected_tile.x, selected_tile.y) != 'structure'){
+							var build = this.sim.createBuilding(selected_tile.x, selected_tile.y, this.user.selected);
+							this.map.placeBuilding(build);
+						}else{
+							console.log("space in use");
+						}
+						
+					}
+					
 					this.viewport.dirty = true;
 				}
 

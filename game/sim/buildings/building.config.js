@@ -5,7 +5,7 @@
  *
  * @package	model-uni
  */
- define("game/sim/buidlings/buildings.config.js",[],
+ define("game/sim/buildings/building.config.js",[],
 // content
 function () {
 	var buildings;
@@ -14,6 +14,8 @@ function () {
 		// Normal tiles (generated)
 		'smallhouse' : {
 						"img": 'assets/buildings/student-flat.png', 
+						"w" : 1,
+						"h" : 1,
 						"type": "accommodation",
 						"capacity": 8,
 						"running_costs": 250,

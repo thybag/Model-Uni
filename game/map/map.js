@@ -40,12 +40,19 @@ function (gen, tiles, buildings) {
 
 			y = building.y;
 			x = building.x;
+			_y = y+building.h;
+			_x = x+building.w;
 
-			for(y; y < building.h; y++)
-				for(x; x < building.w; x++)
-					this.updateTile(x,y,"structure", true);
+			for(y; y < _y; y++)
+				for(x; x < _x; x++)
+					this.updateTile(x, y,"structure", true);
 			
 		}
+
+		this.tileAt = function(x, y){
+			return this.map[x][y];
+		}
+
 		this.removeBuilding = function(building){
 		}
 
