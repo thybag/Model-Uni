@@ -7,7 +7,7 @@ function (building_config) {
 
 		this.entities = {"buildings":[], "students":[], "staff":[]};
 
-
+		this.buildings_config = building_config;
 		this.blank_building = require("game/sim/buildings/building.js");
 
 		this.tick = function(){
@@ -27,7 +27,7 @@ function (building_config) {
 			// is there space?
 
 			// can we afford?
-			building = new this.blank_building(x, y, cfg);
+			building = new this.blank_building(x, y, type, cfg);
 
 			this.entities.buildings.push(building);
 

@@ -7,17 +7,19 @@
  */
 define("game/map/map.js",
 // dependencies
-['game/map/map.generator.js', 'game/map/tiles.js', 'game/map/buildings.js'],
+['game/map/map.generator.js', 'game/map/tiles.js'],
 // content
-function (gen, tiles, buildings) {
+function (gen, tiles) {
 	return new function() {
 
 		// Map width/height
 		this.w = 0;
 		this.h = 0;
 
-		// Terrain map & structure map
+		// Terrain map
 		this.map = [];
+		// structure map
+		this.entities = null;
 
 		// tile
 		this.tiles = tiles;

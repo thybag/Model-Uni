@@ -47,13 +47,14 @@ define("game/game.js",
 				}else{
 					this.map = map.new(50,50);
 				}
+				// Give map access to entities
+				this.map.entities = this.sim.entities;
 				
-
 				// connect inputs
 				this.inputs = this.scene.Input();
 
 				// Setup render
-				this.renderer.init(this.viewport, this.map, this.scene);
+				this.renderer.init(this.viewport, this.map, this.scene, this.sim.buildings_config);
 
 				// make scalable
 				document.addEventListener('mousewheel', function(e){

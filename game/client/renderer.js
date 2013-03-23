@@ -15,7 +15,7 @@ define("game/client/renderer.js",[],
 		this.map = null;
 		// Cache of tile sprites
 		this.layers = {}
-		this.tile_cache = {};
+		this.sprite_cache = {};
 
 		/**
 		 * init
@@ -25,22 +25,25 @@ define("game/client/renderer.js",[],
 		 * @param map - ref to game map
 		 * @param scene - ref to scene
 		 */
-		this.init = function(viewport, map, scene){
+		this.init = function(viewport, map, scene, buildings_config){
 			// Keep a local copy of these values
 			this.map = map;
 			this.viewport = viewport;
 			this.scene = scene;
 
 			this.layers.world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
-	//var players = scene.Layer("players",  {"useCanvas":true, "autoClear":false});
-	//var ui = scene.Layer("ui",  {"useCanvas":true, "autoClear":true});
+
 
 			// cache all tiles as sprites
 			for(tile in this.map.tiles){
-				this.tile_cache[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
+				this.sprite_cache[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
 			}
-			// Add selector tile
-			this.tile_cache['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
+			// cache buildings as sprites
+			for(building in buildings_config){
+				this.sprite_cache[building] = this.scene.Sprite(buildings_config[building].img, { "layer": this.world });
+			}
+			// Add selector sprite
+			this.sprite_cache['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
 			// Set viewport as dirty to trigger inital draw
 			this.viewport.dirty = true; 
 		}
@@ -54,7 +57,7 @@ define("game/client/renderer.js",[],
 			if(this.viewport.is_dirty()){
 				//redraw world if its dirty
 				this.paintWorld();
-				this.viewport.clean();
+				this.paintStructures();
 			}
 		}
 		/** 
@@ -81,7 +84,7 @@ define("game/client/renderer.js",[],
 				for (var x = 0; x < map.w; x++) {
 					current_tile = map.map[y][x];
 
-					this.tile_cache[current_tile].position(tile_x, tile_y-(this.tile_cache[current_tile].h % 65)).canvasUpdate(world);
+					this.sprite_cache[current_tile].position(tile_x, tile_y-(this.sprite_cache[current_tile].h % 65)).canvasUpdate(world);
 		 		 	tile_x += tile_prop.hw;
 		 		 	tile_y += tile_prop.hh;
 				}
@@ -92,14 +95,26 @@ define("game/client/renderer.js",[],
 			this.paintSelector();
 		}
 
+		this.paintStructures = function(){
+			buildings = this.map.entities.buildings;
+
+			for(var i=0; i< buildings.length; i++){
+				structure = buildings[i];
+
+				pos = game.findTileCoords(structure.x, structure.y);
+				// /structure% 65
+				pos.y = pos.y - this.map.tile_propeties.h;
+				this.sprite_cache[structure.name].position(pos.x, pos.y).canvasUpdate(this.layers.world);
+			}
+		}
 		/**
 		 * Draw selector on to canvas
 		 * selector indicates which tile user is hovering on
 		 */
 		this.paintSelector = function(){
 			//selected_tile
-			s = game.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y)
-			this.tile_cache["selector"].position(s.x, s.y).canvasUpdate(this.layers.world);
+			s = game.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y);
+			this.sprite_cache["selector"].position(s.x, s.y).canvasUpdate(this.layers.world);
 		}
 		/**
 		 * Scale canvas 
