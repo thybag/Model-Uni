@@ -183,6 +183,9 @@ define("game/game.js",
 
 				// Show curosr
 				if(this.viewport.selected_tile.x != selected_tile.x || this.viewport.selected_tile.y != selected_tile.y){
+					
+					// @todo change cursor when placing buildings (maybe a see through copy?)
+
 					this.viewport.selected_tile = selected_tile;
     				this.viewport.dirty = true;
 				}
@@ -197,6 +200,9 @@ define("game/game.js",
 							this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
 							this.viewport.dirty = true;
 						}else if(this.user.selection_type == 'building'){
+
+							// @todo: buildings are fat, check tiles behind them are free
+
 							var build = this.sim.createBuilding(selected_tile.x, selected_tile.y, this.user.selected);
 							this.map.placeBuilding(build);
 							this.viewport.dirty = true;
