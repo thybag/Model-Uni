@@ -200,16 +200,16 @@ define("game/game.js",
 					disable_scroll = false;
 				});
 
-				if(mouse.x < edge_boundry && !(mouse.x < 1) && !disable_scroll){
+				if(mouse.x < edge_boundry  && !disable_scroll){
 					this.viewport.x += 5;
 				} 
-				if(mouse.x > client.w-edge_boundry && !(mouse.x > client.w-3) && !disable_scroll){
+				if(mouse.x > client.w-edge_boundry && !disable_scroll){
 					this.viewport.x -= 5;
 				}
-				if(mouse.y < edge_boundry && !(mouse.y < 1) && !disable_scroll){
+				if(mouse.y < edge_boundry && !disable_scroll){
 					this.viewport.y += 5;
 				} 
-				if(mouse.y > client.h-edge_boundry-40 && !(mouse.y > client.h-3) && !disable_scroll){
+				if(mouse.y > client.h-edge_boundry-40 && !disable_scroll){
 					this.viewport.y -= 5;
 				}
 			}

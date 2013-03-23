@@ -16,21 +16,18 @@ define("game/client/ui.js",
 			this.showMenu = function(){
 				this.createBuildMenu();
 
-
-				/*
-				mnu.find('a').click(function(){
-					//unselect
-					mnu.find('li').removeClass('active');
-					//reselect
-					$(this).parent().addClass('active');
-
-					var tile = $(this).attr('data-tile');
-
-					if(typeof tile != 'undefined') game.client.selected_tile = tile;
-
-				})
-				mnu.show();*/
 			}
+
+			this.showSaveMenu = function(){
+				var menu = this.getFragment("ui_save_dialog");
+				$(menu).modal();
+			}
+			this.showHireDialog = function(){
+				var menu = this.getFragment("ui_hire_staff");
+				$(menu).modal();
+			}
+
+			
 
 			this.createBuildMenu = function(){
 				var menu = this.getFragment("ui_build_menu");
