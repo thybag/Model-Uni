@@ -9,7 +9,12 @@ Uses:
 	store.js - https://github.com/marcuswestin/store.js
 
 
-Tile set from: Kenney.nl via http://opengameart.org/content/isometric-road-tiles-nova (CC-BY 3)
+"Nova" Tile set from: Kenney.nl via http://opengameart.org/content/isometric-road-tiles-nova (CC-BY 3)
 
+Additional tiles and buildings by:
+	Amy Randall (https://github.com/TheAmy)
+	Ryan Winham
+	
 
+ 
 

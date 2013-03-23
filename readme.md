@@ -26,7 +26,7 @@ Model-Uni is available under the MIT License.
 
 ## Want to help?
 
-Given my limited game making experience, taking on a project the size I suspect model-uni will be, on my own, is a bit of a crazy prospect. 
+Given my limited game development experience taking on a project of the size I suspect model-uni will be, by myself, is a bit of a crazy prospect. 
 
 If you’re interested in simulation games, have some spare time and either a working knowledge of JavaScript or the ability to create quality isometric graphics, please get in touch.
 
