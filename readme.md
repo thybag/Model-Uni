@@ -7,7 +7,7 @@ Model-uni is an isometric University simulation game. Found your own university,
 
 Live demo: http://userbag.co.uk/labs/modeluni/
 
-Model-Uni is written in JavaScript and is build using a vareity of open source products.
+Model-Uni is written in JavaScript and is built using a vareity of open source packages:
 
 * Sprite.js - https://github.com/batiste/sprite.js
 * Require.js - http://requirejs.org/
