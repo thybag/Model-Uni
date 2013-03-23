@@ -1,3 +1,11 @@
+/**
+ * Viewport
+ * Represents a users view in to the game world. 
+ * Tracks what portion of the map the player is viewing as well as if the world needs to be redrawn
+ *
+ * @package	model-uni
+ */
+
 define("game/client/viewport.js",[],
 	// content
 	function () {

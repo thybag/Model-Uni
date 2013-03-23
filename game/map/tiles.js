@@ -1,4 +1,11 @@
-define("game/map/tiles.js",[],
+/**
+ * Tiles
+ * Define all the differnt tiles in the game, as well as there relations to one another
+ * Tiles also define how they respond to other near by tiles (used to connect roads, rivers, whatever else automatically)
+ *
+ * @package	model-uni
+ */
+ define("game/map/tiles.js",[],
 // content
 function () {
 	var tiles;

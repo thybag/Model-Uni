@@ -1,14 +1,28 @@
+/**
+ * Renderer
+ * Responcible for "painting" world on to canvas in isometric style
+ *
+ * @package	model-uni
+ */
 define("game/client/renderer.js",[],
-	// content
 	function () {
 		return new function() {
 
+		// Required vars
 		this.world = null;
 		this.viewport = null;
 		this.map = null;
-
+		// Cache of tile sprites
 		this.tile_cache = {};
 
+		/**
+		 * init
+		 * Set required values in to object & generate tile cache
+		 *
+		 * @param viewport - ref to game viewport
+		 * @param map - ref to game map
+		 * @param world - ref to world canvas (@todo switch to layers object)
+		 */
 		this.init = function(viewport, map, world){
 			// Keep a local copy of these values
 			this.map = map;
@@ -70,12 +84,19 @@ define("game/client/renderer.js",[],
 			this.paintSelector();
 		}
 
+		/**
+		 * Draw selector on to canvas
+		 * selector indicates which tile user is hovering on
+		 */
 		this.paintSelector = function(){
 			//selected_tile
 			s = game.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y)
 			this.tile_cache["selector"].position(s.x, s.y).canvasUpdate(this.world);
 		}
-
+		/**
+		 * Scale canvas 
+		 * @param scale - scale factor
+		 */
 		this.scale = function(scale){
 
 
@@ -87,7 +108,6 @@ define("game/client/renderer.js",[],
 
 		    // if viewport is dirty, map will be redrawn
 		    this.viewport.dirty = true;
-		   // this.renderWorld(this.viewport.x, this.viewport.y);
 		}
 				
 	}

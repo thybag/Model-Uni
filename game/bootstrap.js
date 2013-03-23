@@ -2,8 +2,7 @@
 var game;
 // Load libary and "game"
 require(["./vendor/spritejs/sprite.js","./game/game.js", "./vendor/store.js"], function(spr, game, store) {
-
-
+	// Make "store" public
 	window.store = store;
 
 	// Setup sprite.js and create layers
