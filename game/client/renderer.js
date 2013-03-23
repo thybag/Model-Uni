@@ -108,11 +108,11 @@ define("game/client/renderer.js",[],
 		this.scale = function(scale){
 
 
-			world = this.world;
+			world = this.layers.world;
 			world.dom.style[sjs.tproperty+"Origin"] = "0 0";
 		    world.dom.style[sjs.tproperty] = "scale(" + scale + "," + scale + ")";
-		    world.dom.width = this.world.scene.w/scale *1;
-		    world.dom.height = this.world.scene.h/scale *1;
+		    world.dom.width = this.scene.w/scale *1;
+		    world.dom.height = this.scene.h/scale *1;
 
 		    // if viewport is dirty, map will be redrawn
 		    this.viewport.dirty = true;

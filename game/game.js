@@ -10,9 +10,10 @@ define("game/game.js",
 		'game/map/map.js',
 		'game/client/ui.js',
 		'game/client/viewport.js',
-		'game/client/renderer.js'	
+		'game/client/renderer.js',
+		'game/sim/simulation.js'	
 	],
-	function (map, ui) {
+	function (map) {
 		return new function() {	
 
 			// Load viewport
@@ -25,10 +26,10 @@ define("game/game.js",
 			}
 
 			// Set UI
-			this.ui = ui;
+			this.ui =  require("game/client/ui.js");
 
 			// actors (live stuff)
-			this.entities = [];
+			this.sim =  require("game/sim/simulation.js");
 
 			// world (set in constructor)
 			this.map = null;
@@ -97,7 +98,7 @@ define("game/game.js",
 				});
 
 				// Show build Menu
-				ui.showMenu();
+				this.ui.showMenu();
 			}
 			
 			/** 
@@ -214,6 +215,11 @@ define("game/game.js",
 				if(mouse.y > client.h-edge_boundry-40 && !disable_scroll){
 					this.viewport.y -= move_distance;
 				}
+
+				// constrain
+				if(this.viewport.y > 200)this.viewport.y = 200;
+				y_min_bound = -((this.map.h*50)-200);
+				if(this.viewport.y < y_min_bound)this.viewport.y = y_min_bound;
 			}
 
 			// Save map (single save currently)

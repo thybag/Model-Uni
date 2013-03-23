@@ -47,6 +47,13 @@ function () {
 		'road_crossroad_new' : {"img": 'assets/tiles/crossroadNEW.png', type: 'road'},
 		'road_crossroad_nsw' : {"img": 'assets/tiles/crossroadNSW.png', type: 'road'},
 
+		// Special placeholder tile
+		'structure' : {
+			"img": 'assets/tiles/dirtDouble.png',
+			"type": "grass",
+			"editable": false
+		},
+
 		// placeable tiles
 		'grass' : {
 			"img": 'assets/tiles/grass.png',

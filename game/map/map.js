@@ -7,17 +7,21 @@
  */
 define("game/map/map.js",
 // dependencies
-['game/map/map.generator.js', 'game/map/tiles.js'],
+['game/map/map.generator.js', 'game/map/tiles.js', 'game/map/buildings.js'],
 // content
-function (gen, tiles) {
+function (gen, tiles, buildings) {
 	return new function() {
+
 		// Map width/height
 		this.w = 0;
 		this.h = 0;
-		// Map array
+
+		// Terrain map & structure map
 		this.map = [];
-		// Tiles array
+
+		// tile
 		this.tiles = tiles;
+
 		// Tile propeties
 		this.tile_propeties = {"w":100, "h":50, "hw": 50, "hh": 25};
 
@@ -26,19 +30,36 @@ function (gen, tiles) {
 			this.w = w;
 			this.h = h;
 			this.map = gen.createMap(w,h);
+			this.structures 
 			return this;
 		}
 
+
+		// Place a building 
+		this.placeBuilding = function(building){
+
+			y = building.y;
+			x = building.x;
+
+			for(y; y < building.h; y++)
+				for(x; x < building.w; x++)
+					this.updateTile(x,y,"structure", true);
+			
+		}
+		this.removeBuilding = function(building){
+		}
+
+
 		// Place a tile
-		this.updateTile = function(x, y, new_tile){
+		this.updateTile = function(x, y, new_tile, force){
 
 			// Valid tile?
 			if(x>0 && x < (this.w-1) && y>0 && y < (this.h-1) ){
 
 				original_tile = this.map[x][y];
 
-				// cannot place tiles on none-editable tiles 
-				if(this.tiles[original_tile].editable === false && typeof new_tile != "undefined") return;
+				// cannot place tiles on none-editable tiles (unless force is set)
+				if(typeof force == "undefined" && this.tiles[original_tile].editable === false && typeof new_tile != "undefined") return;
 
 				// if new tile not provided, use current value
 				if(typeof new_tile == "undefined"){
