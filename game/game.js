@@ -200,17 +200,19 @@ define("game/game.js",
 					disable_scroll = false;
 				});
 
+				var move_distance = 5/this.viewport.scale;
+				
 				if(mouse.x < edge_boundry  && !disable_scroll){
-					this.viewport.x += 5;
+					this.viewport.x += move_distance;
 				} 
 				if(mouse.x > client.w-edge_boundry && !disable_scroll){
-					this.viewport.x -= 5;
+					this.viewport.x -= move_distance;
 				}
 				if(mouse.y < edge_boundry && !disable_scroll){
-					this.viewport.y += 5;
+					this.viewport.y += move_distance;
 				} 
 				if(mouse.y > client.h-edge_boundry-40 && !disable_scroll){
-					this.viewport.y -= 5;
+					this.viewport.y -= move_distance;
 				}
 			}
 
