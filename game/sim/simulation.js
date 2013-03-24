@@ -18,19 +18,22 @@ function (building_config) {
 		this.proto_student = require("game/sim/people/student.js");
 
 		this.tick = function(){
+
 			for(var e=0;e<this.structures.length;e++)
-				this.structures.tick();
+				if(this.structures[e] != null)this.structures[e].tick();
 
 			// Tick simulation for all entities
-			for(var e=0;e<this.entities.length;e++)
-				for(var i=0;i<this.entities[e].length;i++)
-					this.entities[e][i].tick();
+			for(var i=0;i<this.entities.students.length;i++)
+				if(this.entities.students[i] != null)this.entities.students[i].tick();
+
+			for(var i=0;i<this.entities.staff.length;i++)
+				this.entities.staff[i].tick();
 		}
 
 
 		this.createStudent = function(x, y){
 			student = new this.proto_student();
-			student.init();
+			student._init(1, 1);
 			this.entities.students.push(student);
 		}
 

@@ -104,7 +104,9 @@ define("game/game.js",
 			 */
 			this.tick = function(){ 
 				this.check_inputs();
-				//this.sim.run();
+				// run simulation
+				this.sim.tick();
+				// render results
 				this.renderer.tick();
 			}
 
@@ -194,7 +196,7 @@ define("game/game.js",
 				if(this.inputs.mousedown) {
 
 					if(disable_scroll)return;
-					
+
 					// If tile is clear
 					if(this.map.isTileClear(selected_tile.x, selected_tile.y)){
 

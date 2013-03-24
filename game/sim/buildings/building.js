@@ -11,7 +11,7 @@ function () {
 		for(var opt in cfg) this[opt] = cfg[opt];
 
 
-		this.tick = function(){console.log("tock");}
+		this.tick = function(){}
 
 	}
 });

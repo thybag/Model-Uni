@@ -36,18 +36,22 @@ define("game/client/renderer.js",[],
 			this.buildings_config = buildings_config;
 
 			this.layers.world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
-
+			this.layers.entities = scene.Layer("entities",  {"useCanvas":true, "autoClear":false});
 
 			// cache all tiles as sprites
 			for(tile in this.map.tiles){
-				this.sprite_cache[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.world });
+				this.sprite_cache[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.layers.world });
 			}
 			// cache buildings as sprites
 			for(building in buildings_config){
-				this.sprite_cache[building] = this.scene.Sprite(buildings_config[building].img, { "layer": this.world });
+				this.sprite_cache[building] = this.scene.Sprite(buildings_config[building].img, { "layer": this.layers.world });
 			}
+
+			// Add student sprites
+			this.sprite_cache["students"] = this.scene.Sprite("assets/people/students.png", { "layer": this.layers.entities });
+
 			// Add selector sprite
-			this.sprite_cache['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world });
+			this.sprite_cache['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.layers.world });
 			// Set viewport as dirty to trigger inital draw
 			this.viewport.dirty = true; 
 		}
@@ -66,7 +70,34 @@ define("game/client/renderer.js",[],
 				this.paintWorld();
 				this.viewport.clean();
 			}
+			this.paintEntities();
 		}
+
+
+
+		this.paintEntities = function(){
+
+			this.layers.entities.clear();
+
+
+			for (var s = 0; s < this.entities.students.length; s++) {
+				var student = this.entities.students[s];
+
+				if(student !== null){
+
+					pos = game.findTileCoords(student.x, student.y);
+					offsets = student.positionInTile();
+
+					this.sprite_cache[student.sprite_type].position(pos.x+offsets.x, pos.y+offsets.y).size(6,13).setXOffset(6).canvasUpdate(this.layers.entities);
+
+					// lets paint!
+					console.log();
+
+				}
+
+			}
+		}
+
 		/** 
 		 * paintWorld
 		 * re-paints current isometric world to the screen
@@ -129,12 +160,14 @@ define("game/client/renderer.js",[],
 		 */
 		this.scale = function(scale){
 
-
-			world = this.layers.world;
-			world.dom.style[sjs.tproperty+"Origin"] = "0 0";
-		    world.dom.style[sjs.tproperty] = "scale(" + scale + "," + scale + ")";
-		    world.dom.width = this.scene.w/scale *1;
-		    world.dom.height = this.scene.h/scale *1;
+			for(var layer in this.layers){
+				world = this.layers[layer];
+				world.dom.style[sjs.tproperty+"Origin"] = "0 0";
+			    world.dom.style[sjs.tproperty] = "scale(" + scale + "," + scale + ")";
+			    world.dom.width = this.scene.w/scale *1;
+			    world.dom.height = this.scene.h/scale *1;	
+			}
+		
 
 		    // if viewport is dirty, map will be redrawn
 		    this.viewport.dirty = true;
