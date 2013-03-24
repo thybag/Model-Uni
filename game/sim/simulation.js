@@ -1,21 +1,39 @@
  define("game/sim/simulation.js",
- 	["game/sim/buildings/building.config.js",
- 	"game/sim/buildings/building.js"],
+ 	[
+	 	"game/sim/buildings/building.config.js",
+	 	"game/sim/buildings/building.js",
+	 	"game/sim/people/student.js"
+ 	],
 // content
 function (building_config) {
 	return new function(){
 
-		this.entities = {"buildings":[], "students":[], "staff":[]};
+		this.structures = [];
+		this.entities = { "students":[], "staff":[] };
+
+
 
 		this.buildings_config = building_config;
-		this.blank_building = require("game/sim/buildings/building.js");
+		this.proto_building = require("game/sim/buildings/building.js");
+		this.proto_student = require("game/sim/people/student.js");
 
 		this.tick = function(){
+			for(var e=0;e<this.structures.length;e++)
+				this.structures.tick();
+
 			// Tick simulation for all entities
-			for(var e;e<this.entities.length;e++)
-				for(var i;i<this.entities[e].length;i++)
+			for(var e=0;e<this.entities.length;e++)
+				for(var i=0;i<this.entities[e].length;i++)
 					this.entities[e][i].tick();
 		}
+
+
+		this.createStudent = function(x, y){
+			student = new this.proto_student();
+			student.init();
+			this.entities.students.push(student);
+		}
+
 
 
 		this.getBuildingDetails = function(type){
@@ -27,25 +45,27 @@ function (building_config) {
 			// is there space?
 
 			// can we afford?
-			building = new this.blank_building(x, y, type, cfg);
+			building = new this.proto_building(x, y, type, cfg);
 			// store id & add to entities
-			building.id = this.entities.buildings.length;
-			this.entities.buildings.push(building);
+			building.id = this.structures.length;
+			this.structures.push(building);
 
 			return building;
 		}
 		
-		this.load = function(entity_data){
-			for(itm in entity_data.buildings){
+		this.load = function(entity_data, structures){
+
+			console.log(structures);
+			for(itm in structures){
 
 				val = null;
-				if(entity_data.buildings[itm] != null){
+				if(structures[itm] != null){
 					// Rebuild entity object
-					tmp = entity_data.buildings[itm];
-					val = new this.blank_building(tmp.x, tmp.y, tmp.name, tmp);
+					tmp = structures[itm];
+					val = new this.proto_building(tmp.x, tmp.y, tmp.name, tmp);
 
 				}
-				this.entities.buildings.push(val);
+				this.structures.push(val);
 			}
 		}
 	}

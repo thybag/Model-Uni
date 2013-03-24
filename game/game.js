@@ -53,6 +53,7 @@ define("game/game.js",
 
 				// Setup render
 				this.renderer.init(this.viewport, this.map, this.scene, this.sim.buildings_config);
+				this.renderer.setEntities(this.sim.entities);
 
 				// make scalable
 				document.addEventListener('mousewheel', function(e){
@@ -217,21 +218,13 @@ define("game/game.js",
 
 								// get building details
 								structure = this.map.buildingAt(selected_tile.x, selected_tile.y);
-								building = this.sim.entities.buildings[structure.id];
+								building = this.sim.structures[structure.id];
 
 								// Remove from map
 								this.map.removeBuilding(building);
 
 								// Remove from entities
-								this.sim.entities.buildings[structure.id]= null;
-
-								//console.log(this.sim.entities.buildings);
-								//console.log("buidling cleared");
-
-								//this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
-
-
-
+								this.sim.structures[structure.id] = null;
 							}else{
 								this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
 							}
@@ -274,7 +267,7 @@ define("game/game.js",
 					tmp = {};
 					tmp.mapdata = this.map.forSave();
 					tmp.entities = this.sim.entities;
-
+					tmp.structures = this.sim.structures;
 					store.set('map', tmp);
 					console.log("game saved");
 				}else{
@@ -293,7 +286,7 @@ define("game/game.js",
 
 					tmp = store.get('map');
 					this.map.load(tmp.mapdata);
-					this.sim.load(tmp.entities);
+					this.sim.load(tmp.entities, tmp.structures);
 				}
 			}
 			this.new_game = function(){

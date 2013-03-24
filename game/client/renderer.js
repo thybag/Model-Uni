@@ -8,12 +8,14 @@ define("game/client/renderer.js",[],
 	function () {
 		return new function() {
 
-		
 		// Required vars
 		this.scene = null;
 		this.viewport = null;
 		this.map = null;
 		this.building_config = null;
+		// humans
+		this.entities = null;
+
 		// Cache of tile sprites
 		this.layers = {}
 		this.sprite_cache = {};
@@ -45,9 +47,12 @@ define("game/client/renderer.js",[],
 				this.sprite_cache[building] = this.scene.Sprite(buildings_config[building].img, { "layer": this.world });
 			}
 			// Add selector sprite
-			this.sprite_cache['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world })
+			this.sprite_cache['selector'] = this.scene.Sprite('assets/tiles/selector.png', { "layer": this.world });
 			// Set viewport as dirty to trigger inital draw
 			this.viewport.dirty = true; 
+		}
+		this.setEntities = function(entities){
+			this.entities = entities;
 		}
 
 		/** 
