@@ -131,7 +131,7 @@ define("game/client/renderer.js",[],
 							cfg = this.buildings_config[structure_name];
 							sprite = this.sprite_cache[structure_name];
 
-							this.sprite_cache[structure_name].position(tile_x-((cfg.w-1)*tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.world);
+							this.sprite_cache[structure_name].position(tile_x-(sprite.w-tile_prop.w) + ((cfg.w-1) * tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.world);
 						}
 					}
 

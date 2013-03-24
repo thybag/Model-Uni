@@ -4,7 +4,20 @@ define("game/sim/people/student.js",
 function (person) {
 	var Student = function(){
 
-		// Set person as parent
+		// Attributes
+		this.fitness = 50;
+		this.tiredness = 0;
+		this.hunger = 0;
+		this.drunkness = 0;
+		this.smartness = 0;
+		this.bordem = 0;
+
+		this.happiness = 0;
+
+		
+
+
+		// Internals
 		this.sprite_type = 'students';
 		this.counter = 0;
 
