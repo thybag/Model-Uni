@@ -44,12 +44,10 @@ function (person) {
 			// assign room & course
 			this.course = this.sim.courses[this.rand(this.sim.courses.length)-1];
 
-			possible_homes = this.sim.findStructureByType("accommodation");
-			for(var i=0;i<possible_homes.length;i++){
-				if(possible_homes[i].occupancy < possible_homes[i].capacity)break;
-			}
-			possible_homes[i].occupancy++;
-			this.home = possible_homes[i];
+			possible_homes = this.sim.findStructureByType("accommodation", true);
+
+			this.home = possible_homes[this.rand(possible_homes.length)-1]
+			this.home.residence++;
 
 			//first action
 			this._goHome();

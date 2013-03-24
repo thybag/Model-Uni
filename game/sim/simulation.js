@@ -90,12 +90,18 @@ function (building_config) {
 			this.structures[building.id] = null;
 		}
 
-		this.findStructureByType = function(type){
+		this.findStructureByType = function(type, is_free){
 
 			var results = [], s = null;
 			for(var i=0;i<this.structures.length;i++){
 				s = this.structures[i];
-				if(s !== null && s.type == type) results.push(s);
+
+				if(typeof is_free == 'undefined'){
+					if(s !== null && s.type == type) results.push(s);
+				}else{
+					if(s !== null && s.type == type && s.capacity > s.occupancy) results.push(s);
+				}
+				
 			}
 			return results;
 

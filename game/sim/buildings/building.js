@@ -6,6 +6,8 @@ function () {
 
 		// defaults
 		this.occupancy = 0;
+		//used for accom
+		this.residence = 0;
 
 		// Load configurtion details from room cfg
 		this.x = x;
