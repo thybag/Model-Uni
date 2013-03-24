@@ -49,7 +49,8 @@ function () {
 
 		// Special placeholder tile
 		'structure' : {
-			"img": 'assets/tiles/dirtDouble.png',
+			//"img": 'assets/tiles/dirtDouble.png',
+			"img": 'assets/tiles/grass.png',
 			"type": "grass",
 			"editable": false
 		},

@@ -14,6 +14,7 @@ Model-Uni is written in JavaScript and is built using a vareity of open source p
 * Bootstrap - http://twitter.github.com/bootstrap
 * jQuery - http://jquery.com/
 * store.js - https://github.com/marcuswestin/store.js
+* JavaScript a-star - https://github.com/bgrins/javascript-astar
 * Tile set from: Kenney.nl via http://opengameart.org/content/isometric-road-tiles-nova (CC-BY 3)
 
 ## Quickstart guide
