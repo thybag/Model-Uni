@@ -8,6 +8,9 @@ function (person) {
 		this.sprite_type = 'students';
 		this.counter = 0;
 
+		this.movement_queue = [];
+
+
 		this.init = function(x,y){
 
 			// possible "sprite types"
@@ -17,11 +20,27 @@ function (person) {
 		this.tick = function(){
 			this.counter++;
 
-			// move every 100 ticks
-			if(this.counter > 100){
-				this.y++;
-				this.counter = 0;
+			
+			if(this.movement_queue.length != 0){
+				// move every 100 ticks
+				if(this.counter > 100){
+					console.log("move to next place");
+					move_to = this.movement_queue.shift()
+
+					this.x = move_to.x;
+					this.y = move_to.y;
+					//this.y++;
+					this.counter = 0;
+				}
+			}else{
+				// What do i want to do?
+				console.log("decide action");
+				this.movement_queue = game.map.findPath({x: this.x, y: this.y}, {x:10, y:5});
+				console.log(this.movement_queue);
 			}
+			
+
+			
 			//move = 2;
 
 			//this.inner_x += move;

@@ -8,7 +8,7 @@ Uses:
 	jQuery - http://jquery.com/
 	Bootstrap - http://twitter.github.com/bootstrap
 	store.js - https://github.com/marcuswestin/store.js
-
+	JavaScript a-star - https://github.com/bgrins/javascript-astar
 
 "Nova" Tile set from: Kenney.nl via http://opengameart.org/content/isometric-road-tiles-nova (CC-BY 3)
 

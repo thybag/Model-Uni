@@ -7,7 +7,7 @@
  */
 define("game/map/map.js",
 // dependencies
-['game/map/map.generator.js', 'game/map/tiles.js'],
+['game/map/map.generator.js', 'game/map/tiles.js', 'vendor/astar.min.js'],
 // content
 function (gen, tiles) {
 	return new function() {
@@ -20,6 +20,8 @@ function (gen, tiles) {
 		this.map = [];
 		// structure map
 		this.structure_map = [];
+		// Used for path finding
+		this.graph = null;
 
 		// tile
 		this.tiles = tiles;
@@ -38,7 +40,7 @@ function (gen, tiles) {
 			this.h = h;
 			this.map = gen.createMap(w,h);
 			this.structure_map = gen.emptyMap(w,h);
-			this.structures 
+			this.makeGraph();
 			return this;
 		}
 
@@ -59,6 +61,8 @@ function (gen, tiles) {
 			}else{
 				this.structure_map = data.structure_map;
 			}	
+
+			this.makeGraph();
 		}
 
 		/**
@@ -208,6 +212,28 @@ function (gen, tiles) {
 					this.updateTile(x, y+1);
 				}	
 			}
+		}
+
+		this.makeGraph = function(){
+			var nodes = gen.emptyMap(this.h,this.w);
+			for(var x=0; x<this.w;x++){
+				for(var y=0; y<this.h;y++){
+
+					if(this.tiles[this.map[x][y]].type == 'road'){
+						nodes[x][y] = 1;
+					}else if(this.map[x][y] == 'structure'){
+						nodes[x][y] = 0;
+					}else{
+						nodes[x][y] = 5;
+					}
+				}
+			}
+			console.log(nodes);
+			this.graph = new Graph(nodes);
+		}
+
+		this.findPath = function (from, to){
+			return astar.search(this.graph.nodes, this.graph.nodes[from.x][from.y], this.graph.nodes[to.x][to.y])
 		}
 
 		/**

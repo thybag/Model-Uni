@@ -8,6 +8,8 @@ function () {
 		this.inner_x = 50;
 		this.inner_y = 25;
 
+		this.visable = true;
+
 		this.sprite_type = '';
 		this.sprite_instance = '';
 
