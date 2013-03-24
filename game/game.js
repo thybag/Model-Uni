@@ -193,6 +193,8 @@ define("game/game.js",
 				
 				if(this.inputs.mousedown) {
 
+					if(disable_scroll)return;
+					
 					// If tile is clear
 					if(this.map.isTileClear(selected_tile.x, selected_tile.y)){
 
