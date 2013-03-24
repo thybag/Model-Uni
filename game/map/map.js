@@ -219,16 +219,16 @@ function (gen, tiles) {
 			for(var x=0; x<this.w;x++){
 				for(var y=0; y<this.h;y++){
 
-					if(this.tiles[this.map[x][y]].type == 'road'){
+					var tile_type = this.tiles[this.map[x][y]].type;
+					if(tile_type == 'road' || tile_type == 'big_road'){
 						nodes[x][y] = 1;
 					}else if(this.map[x][y] == 'structure'){
-						nodes[x][y] = 0;
+						nodes[x][y] = 500; // not infite, but no likely to walk through either (if an alterntive exists)
 					}else{
 						nodes[x][y] = 5;
 					}
 				}
 			}
-			console.log(nodes);
 			this.graph = new Graph(nodes);
 		}
 

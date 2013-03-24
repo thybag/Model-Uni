@@ -83,15 +83,13 @@ define("game/client/renderer.js",[],
 			for (var s = 0; s < this.entities.students.length; s++) {
 				var student = this.entities.students[s];
 
-				if(student !== null){
+				if(student !== null && student.visable){
 
 					pos = game.findTileCoords(student.x, student.y);
 					offsets = student.positionInTile();
-					console.log("size:" +(student.sprite_instance*6));
+
 					this.sprite_cache[student.sprite_type].position(pos.x+offsets.x, pos.y+offsets.y).size(5,13).setXOffset(student.sprite_instance*6).canvasUpdate(this.layers.entities);
 
-					// lets paint!
-					console.log();
 
 				}
 

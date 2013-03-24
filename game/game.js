@@ -222,18 +222,24 @@ define("game/game.js",
 
 								// get building details
 								structure = this.map.buildingAt(selected_tile.x, selected_tile.y);
-								building = this.sim.structures[structure.id];
+								building = this.sim.getBuildingById(structure.id);
 
 								// Remove from map
+								this.sim.removeBuilding(building);
 								this.map.removeBuilding(building);
-
-								// Remove from entities
-								this.sim.structures[structure.id] = null;
 							}else{
 								this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
 							}
 							this.viewport.dirty = true;
+						}else{
+							// not demolishing
+
+							console.log("launch building dialog");
+
+
 						}
+
+
 					}
 				}
 
@@ -270,8 +276,7 @@ define("game/game.js",
 
 					tmp = {};
 					tmp.mapdata = this.map.forSave();
-					tmp.entities = this.sim.entities;
-					tmp.structures = this.sim.structures;
+					tmp.sim = this.sim.forSave();
 					store.set('map', tmp);
 					console.log("game saved");
 				}else{
@@ -290,7 +295,7 @@ define("game/game.js",
 
 					tmp = store.get('map');
 					this.map.load(tmp.mapdata);
-					this.sim.load(tmp.entities, tmp.structures);
+					this.sim.load(tmp.sim);
 				}
 			}
 			this.new_game = function(){
