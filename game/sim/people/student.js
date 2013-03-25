@@ -130,7 +130,7 @@ function (person) {
 		}
 
 		this.decideNextAction = function(){
-			this.thunk("That is done. now i will decided my next action");
+			this.thunk("That is done. Now i will decided my next action.");
 
 			if(this.tiredness < 50 && this.hunger < 50){
 				if(this.bordem < 60){
@@ -166,7 +166,7 @@ function (person) {
 		}
 
 		this._enterBuilding = function(){
-			this.thunk("Entering a " +  this.building_going_to.type +" building.");
+			this.thunk("Entering <" +  this.building_going_to.type +"> building.");
 			this.building_in = this.building_going_to;
 			this.building_going_to = null;
 			this.building_in.occupancy++;
@@ -175,7 +175,7 @@ function (person) {
 						
 		}
 		this._exitBuilding = function(){
-			this.thunk("Exiting a " +  this.building_in.type +" building.");
+			this.thunk("Exiting <" +  this.building_in.type +"> building.");
 
 			this.building_in.occupancy--;
 			this.building_in = null;
@@ -187,7 +187,7 @@ function (person) {
 		// common actions
 
 		this.planRouteTo = function(building){
-			this.thunk("off i go.");
+			this.thunk("*sets off*");
 			this.movement_queue = game.map.findPath({x: this.x, y: this.y}, {x:building.x , y:building.y});
 			this.building_going_to = building;
 		}
@@ -200,26 +200,26 @@ function (person) {
 		}
 
 		this._findEducation = function(){
-			this.thunk("Goto education");
+			this.thunk("I want to lean somthing <education>");
 
 			result = this.sim.findRandomStructureByType("education");
 			if(result==false)return false;
 			this.planRouteTo(result);
 		}
 		this._findFood = function(){
-			this.thunk("Goto food");
+			this.thunk("I want to get some food <food>");
 			result = this.sim.findRandomStructureByType("food");
 			if(result==false)return false;
 			this.planRouteTo(result);
 		}
 		this._findFun = function(){
-			this.thunk("Goto fun");
+			this.thunk("I want to have fun <fun>");
 			result = this.sim.findRandomStructureByType("fun");
 			if(result==false)return false;
 			this.planRouteTo(result);
 		}
 		this._findFitness= function(){
-			this.thunk("Goto fitness");
+			this.thunk("I want to get fit <fitness>");
 			result = this.sim.findRandomStructureByType("fun");
 			if(result==false)return false;
 			this.planRouteTo(result);
