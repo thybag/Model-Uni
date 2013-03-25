@@ -53,6 +53,20 @@ function (person) {
 		}
 
 
+		this.next_tile = function(){
+			if(this.movement_queue.length !==0)return this.movement_queue[0];
+			return false;
+		}
+		this.next_direction = function(){
+			if(next = this.next_tile()){
+				if(next.x > this.x) return 'left';
+				if(next.x < this.x) return 'right';
+				if(next.y < this.y) return 'up';
+				if(next.y > this.y) return 'down';
+			}
+			return false;
+		}
+
 
 		this.init = function(x,y){
 
@@ -62,10 +76,14 @@ function (person) {
 			// assign room & course
 			this.course = this.sim.courses[this.rand(this.sim.courses.length)-1];
 
+			// assign home
 			possible_homes = this.sim.findStructureByType("accommodation", true);
-
 			this.home = possible_homes[this.rand(possible_homes.length)-1]
 			this.home.residence++;
+
+			//offset slighly
+			this.x_offset += this.rand(18)-9; // +/- 9
+			this.y_offset += this.rand(22)-11;
 
 			this.thunk("I'm new. My room is <"+ this.home.id+"> and i study" + this.course.name);
 
@@ -89,6 +107,7 @@ function (person) {
 				if(this.action_counter > 6){
 					this._exitBuilding();
 					this.action_counter = 0;
+					this.counter = 0;
 				}
 			}else{
 				// Walking modifiers
@@ -110,7 +129,6 @@ function (person) {
 
 						this.x = move_to.x;
 						this.y = move_to.y;
-
 					}
 
 				}else{

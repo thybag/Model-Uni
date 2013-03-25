@@ -107,6 +107,7 @@ define("game/game.js",
 				// run simulation
 				this.sim.tick();
 				// render results
+				this.ui.tick();
 				this.renderer.tick();
 			}
 

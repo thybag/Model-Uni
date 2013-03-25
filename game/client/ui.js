@@ -12,6 +12,12 @@ function () {
 		// Fragments cache to load templates
 		var fragments = {};
 		var template_fragments = {};
+		var ticker_internal = 100;
+
+		//ref
+		this.mainMenu = null;
+		this.date = null;
+		this.cash = null;
 
 		// Load view file.
 		$.get("game/client/ui.html", function(html){
@@ -19,6 +25,20 @@ function () {
 			fragment.innerHTML = html;
 			template_fragments = fragment;
 		});
+
+
+
+		this.tick = function(){
+			ticker_internal++;
+			if(ticker_internal > 40){
+
+				var dt = game.sim.getGameDate();
+
+				this.date.text(dt.hour + ':' +dt.min + ' - ' + dt.day + ' ' + dt.month + ' ' +dt.year);
+
+				ticker_internal = 0;
+			}
+		}
 
 		this.showMenu = function(){
 			this.createBuildMenu();
@@ -76,6 +96,10 @@ function () {
 				}
 			});
 			menu.show();
+
+			this.mainMenu = menu;
+			this.date = menu.find('#ui-date-box');
+			this.cash = menu.find('#ui-cash-box');
 		}
 
 		// Get an HTML fragment from template file

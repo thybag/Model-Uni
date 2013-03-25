@@ -73,12 +73,25 @@ define("game/client/renderer.js",[],
 			this.paintEntities();
 		}
 
+		// Use counter step (100 steps between action) combined with direction
+		// to twean move animations for humans
+		this.findHumanAnimationStep = function(move_percent, direction){
+			x = move_percent = move_percent/2;
+			y = move_percent/2;
+			//down is already correct
+			if(direction=='up'){x = -x; y = -y;}
+			if(direction=='left')x = -x;
+			if(direction=='right')y = -y;
+			
+			x = 50 + x;
+			y = 25 + y;
 
+			return {x: Math.floor(x), y : Math.floor(y)};
+		}
 
 		this.paintEntities = function(){
 
 			this.layers.entities.clear();
-
 
 			for (var s = 0; s < this.entities.students.length; s++) {
 				var student = this.entities.students[s];
@@ -86,9 +99,14 @@ define("game/client/renderer.js",[],
 				if(student !== null && student.visable){
 
 					pos = game.findTileCoords(student.x, student.y);
-					offsets = student.positionInTile();
+					step = this.findHumanAnimationStep(student.counter, student.next_direction());
 
-					this.sprite_cache[student.sprite_type].position(pos.x+offsets.x, pos.y+offsets.y).size(5,13).setXOffset(student.sprite_instance*6).canvasUpdate(this.layers.entities);
+					this.sprite_cache[student.sprite_type]
+
+						.position(pos.x+step.x+student.x_offset, pos.y+step.y+student.y_offset)
+						.size(5,13)
+						.setXOffset(student.sprite_instance*6)
+						.canvasUpdate(this.layers.entities);
 
 
 				}

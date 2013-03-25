@@ -8,7 +8,6 @@
 function (building_config) {
 	return new function(){
 
-
 		this.courses = [
 			{"name":"math", "lectures":["james","tim"]  }, 
 			{"name":"english", "lectures":["zim"]  },
@@ -26,6 +25,9 @@ function (building_config) {
 			"time" : (new Date()).getTime()
 		}
 
+		// internals 
+		this.counter = 0;
+
 		this.buildings_config = building_config;
 		this.proto_building = require("game/sim/buildings/building.js");
 		this.proto_student = require("game/sim/people/student.js");
@@ -35,8 +37,9 @@ function (building_config) {
 
 		this.tick = function(){
 
-			this.data.time += 1000;
-
+			// sync clock
+			if(this.counter > 500){this.data.time += 3600000; this.counter=0;}this.counter++;
+			
 			for(var e=0;e<this.structures.length;e++)
 				if(this.structures[e] != null)this.structures[e].tick();
 
@@ -50,7 +53,7 @@ function (building_config) {
 
 		this.createStudent = function(x, y){
 			student = new this.proto_student();
-			student._init(1, 1);
+			student._init(0, 1);
 			this.entities.students.push(student);
 			this.data.student_population++;
 		}
@@ -59,14 +62,17 @@ function (building_config) {
 			var date = {};
 
 			date._date = new Date(this.data.time);
-			console.log(date._date.getFullYear());
 			date.year = date._date.getFullYear();
-			data.month_no = date._date.getMonth();
-		    date.month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][data.month_no];
+			date.month_no = date._date.getMonth();
+		    date.month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.month_no];
 		    date.day = date._date.getDate();
+		    if(date.day < 10) date.day = '0'+date.day;
 		    date.hour = date._date.getHours();
-		    date.min = date._date.getMinutes();
-		    date.sec = date._date.getSeconds();
+		    if(date.hour < 10) date.hour = '0'+date.hour;
+		    date.min = '00' ;
+		    //date._date.getMinutes();
+		   // if(date.min < 10) date.min = '0'+date.min;
+
 			//
 			return date;
 

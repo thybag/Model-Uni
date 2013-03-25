@@ -5,9 +5,8 @@ function () {
 
 		this.x = 0;
 		this.y = 0;
-		this.inner_x = 50;
-		this.inner_y = 25;
-
+		this.y_offset = -13;
+		this.x_offset = -2;
 		this.visable = true;
 
 		this.sprite_type = '';
@@ -23,6 +22,10 @@ function () {
 
 			this.init(x, y);
 		}
+
+
+
+
 		// This should be overwritten
 		this.tick = function(){
 
@@ -43,9 +46,6 @@ function () {
 
 		this.currentTile = function(){
 			return {"x": this.x, "y": this.y};
-		}
-		this.positionInTile = function(){
-			return {"x": this.inner_x-2, "y": this.inner_y - 13};
 		}
 
 		// between 1 & top
