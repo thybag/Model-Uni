@@ -37,6 +37,7 @@ define("game/client/renderer.js",[],
 
 			this.layers.world = scene.Layer("world",  {"useCanvas":true, "autoClear":false});
 			this.layers.entities = scene.Layer("entities",  {"useCanvas":true, "autoClear":false});
+			this.layers.buildings = scene.Layer("buildings",  {"useCanvas":true, "autoClear":false});
 
 			// cache all tiles as sprites
 			for(tile in this.map.tiles){
@@ -44,7 +45,7 @@ define("game/client/renderer.js",[],
 			}
 			// cache buildings as sprites
 			for(building in buildings_config){
-				this.sprite_cache[building] = this.scene.Sprite(buildings_config[building].img, { "layer": this.layers.world });
+				this.sprite_cache[building] = this.scene.Sprite(buildings_config[building].img, { "layer": this.layers.buildings });
 			}
 
 			// Add student sprites
@@ -102,15 +103,11 @@ define("game/client/renderer.js",[],
 					step = this.findHumanAnimationStep(student.counter, student.next_direction());
 
 					this.sprite_cache[student.sprite_type]
-
 						.position(pos.x+step.x+student.x_offset, pos.y+step.y+student.y_offset)
 						.size(5,13)
 						.setXOffset(student.sprite_instance*6)
 						.canvasUpdate(this.layers.entities);
-
-
 				}
-
 			}
 		}
 
@@ -133,12 +130,14 @@ define("game/client/renderer.js",[],
 			var current_tile;
 
 			world.clear();
+			this.layers.buildings.clear();
 
 			for (var y = 0; y < map.h; y++) {
 				for (var x = 0; x < map.w; x++) {
 					current_tile = map.map[y][x];
 					//draw tile
 					this.sprite_cache[current_tile].position(tile_x, tile_y-(this.sprite_cache[current_tile].h % 65)).canvasUpdate(world);
+
 		 		 	//draw structure
 					if(typeof map.structure_map[y][x] != 'undefined' && map.structure_map[y][x] != null){
 
@@ -146,11 +145,10 @@ define("game/client/renderer.js",[],
 							structure_name = map.structure_map[y][x].sprite;
 							cfg = this.buildings_config[structure_name];
 							sprite = this.sprite_cache[structure_name];
-
-							this.sprite_cache[structure_name].position(tile_x-(sprite.w-tile_prop.w) + ((cfg.w-1) * tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.world);
+							// draw sprite of building to "buildings" layer
+							sprite.position(tile_x-(sprite.w-tile_prop.w) + ((cfg.w-1) * tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.buildings);
 						}
 					}
-
 		 		 	tile_x += tile_prop.hw;
 		 		 	tile_y += tile_prop.hh;
 				}
@@ -168,7 +166,8 @@ define("game/client/renderer.js",[],
 		this.paintSelector = function(){
 			//selected_tile
 			s = game.findTileCoords(this.viewport.selected_tile.x, this.viewport.selected_tile.y);
-			this.sprite_cache["selector"].position(s.x, s.y).canvasUpdate(this.layers.world);
+			// Draw to buildings layer (as this is the front most one)
+			this.sprite_cache["selector"].position(s.x, s.y).canvasUpdate(this.layers.buildings);
 		}
 		/**
 		 * Scale canvas 

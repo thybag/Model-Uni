@@ -53,7 +53,7 @@ function (building_config) {
 
 		this.createStudent = function(x, y){
 			student = new this.proto_student();
-			student._init(0, 1);
+			student._init(1, 0);
 			this.entities.students.push(student);
 			this.data.student_population++;
 		}
