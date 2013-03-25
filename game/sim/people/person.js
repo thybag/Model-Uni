@@ -29,11 +29,17 @@ function () {
 		}
 
 
-		this.hello = function(){ console.log("hi"); }
 
-		
+		// Thoughts
+		this.complaints = [];
+		this.compliments = [];
+		this.complain = function(complain){
+			this.complaints.push(complain);
+		}
+		this.compliment = function(compliment){
+			this.compliments.push(compliment);
+		}
 
-		this.route = function(){}
 
 		this.currentTile = function(){
 			return {"x": this.x, "y": this.y};

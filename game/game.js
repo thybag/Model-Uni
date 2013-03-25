@@ -233,8 +233,10 @@ define("game/game.js",
 							this.viewport.dirty = true;
 						}else{
 							// not demolishing
-
+							structure = this.map.buildingAt(selected_tile.x, selected_tile.y);
+							building = this.sim.getBuildingById(structure.id);	
 							console.log("launch building dialog");
+							console.log(building);
 
 
 						}

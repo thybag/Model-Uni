@@ -104,6 +104,12 @@ function (building_config) {
 				
 			}
 			return results;
+		}
+		this.findRandomStructureByType = function(type){
+
+			results = this.findStructureByType(type);
+			if(results.length==0) return false;
+			return results[Math.floor((Math.random()*results.length))];
 
 		}
 

@@ -14,7 +14,7 @@ function (person) {
 		this.bordem = 50; // how board are they?
 		this.confidence = 50; // confidence?
 
-		//  how happy are they
+		//  how happy are they (Sad AI may eat more junkfood?)
 		this.happiness = 40;
 
 		// Base attributes (effect behavious?)
@@ -23,17 +23,35 @@ function (person) {
 		this._resilience = 5; // resitance to tireness/ drinking to much
 		this._volatile = 5; // will they start fights / break stuff / mood swings
 
-
 		// data
 		this.course = '<id>';
 		this.home = '<id>';
+		this.name = "Jimmy";
 
 		// Internals
+		this.building_going_to = null;
+		this.building_in = null;
+		this.movement_queue = [];
+		
 		this.sprite_type = 'students';
 		this.counter = 0;
-		this.movement_queue = [];
+		this.action_counter = 0;
 
-		this.in_building = false;
+		// debug - listen to a students though proccess
+		this.thunk_loudly = false;
+		this.thunk = function(msg){if(this.thunk_loudly) console.log('['+this.name+'] ' +msg);}
+
+		this.is_action_tick = function(){
+			t = (this.counter > 100);
+			if(t)this.counter=0;
+
+			return t;
+		}
+		
+		this.in_building = function(){
+			return (this.building_in !== null);
+		}
+
 
 
 		this.init = function(x,y){
@@ -49,62 +67,91 @@ function (person) {
 			this.home = possible_homes[this.rand(possible_homes.length)-1]
 			this.home.residence++;
 
+			this.thunk("I'm new. My room is <"+ this.home.id+"> and i study" + this.course.name);
+
 			//first action
 			this._goHome();
 		}
 
-		this.tick = function(){
-			this.counter++;
+		this.action_tick = function(){
+			this.action_counter++;
 
-			if(!this.in_building){
+			// Apply att changes
+			if(this.in_building()){
 
+				this.thunk("I'm inside a "+ this.building_in.type +" building.");
+				// Apply buildings modifiers
+				for(m in this.building_in.modifiers){
+					this[m] += this.building_in.modifiers[m];
+				}
+
+				// After been in buidling long enough, leave
+				if(this.action_counter > 6){
+					this._exitBuilding();
+					this.action_counter = 0;
+				}
+			}else{
+				// Walking modifiers
+				this.hunger++;
+				this.tiredness++;
+				this.fitness++;
+				// Are we going somewhere?
 				if(this.movement_queue.length != 0){
 
+					if(this.movement_queue.length==1){
+						// empty queue
+						this.movement_queue.shift();
+						this._enterBuilding();
+						this.action_counter = 0;
 
-					// move every 100 ticks
-					if(this.counter > 100){
+					}else{
+						this.thunk("Walking to next tile...");
+						move_to = this.movement_queue.shift();
 
-						if(this.movement_queue.length==1){
-							// Next step is destintion, enter building
-							move_to = this.movement_queue.shift();
-							building = game.map.buildingAt(move_to.x, move_to.y);
+						this.x = move_to.x;
+						this.y = move_to.y;
 
-							structure = this.sim.getBuildingById(building.id);
-
-							this._enterBuilding(structure);
-						}else{
-							console.log("move to next place");
-							move_to = this.movement_queue.shift();
-
-							this.x = move_to.x;
-							this.y = move_to.y;
-
-						}
-						//this.y++;
-						this.counter = 0;
 					}
+
 				}else{
 					// What do i want to do?
-					console.log("decide action");
-
-					this.decideNextAction();
+						this.decideNextAction();
 				}
-
-
-			}else{
-				// leave building after stay of length X
-				if(this.counter > 1000){
-					this._exitBuilding();
-					this.counter = 0;
-				}
-
 
 			}
 
 		}
 
-		this.decideNextAction = function(){
+		this.tick = function(){
+			this.counter++;
 
+			if(this.is_action_tick()) this.action_tick();
+
+		}
+
+		this.decideNextAction = function(){
+			this.thunk("That is done. now i will decided my next action");
+
+			if(this.tiredness < 50 && this.hunger < 50){
+				if(this.bordem < 60){
+					action = this._findEducation();
+					if(action==false) this.complain("no_learn");
+				}else{
+					action = this._findFun();
+					if(action==false) this.complain("no_fun");
+				}
+			}
+			else
+			{
+				// Eat & sleep - almost like a real person!
+				if(this.tiredness > this.hunger){
+					this._goHome();
+				}else{
+					action = this._findFood();
+					if(action==false) this.complain("no_food");
+				}
+			}
+	
 			// critial
 			// am i v tied / v hungry?
 
@@ -112,22 +159,70 @@ function (person) {
 
 			// what do i want to do most? (fun/eat/drink/party)
 
+			this.thunk("I was unable to do what i wanted. Guess i'll just go back to my room.");
+			this.happiness -= 5; // Not being able to do what they want makes AI's sad
+			// Nothing todo? back to bed
+			this._goHome();
 		}
 
-		this._enterBuilding = function(building){
+		this._enterBuilding = function(){
+			this.thunk("Entering a " +  this.building_going_to.type +" building.");
+			this.building_in = this.building_going_to;
+			this.building_going_to = null;
+			this.building_in.occupancy++;
 
-			this.in_building = true;
 			this.visable = false;
-			building.occupancy++;
 						
 		}
-		this._exitBuilding = function(building){
-			console.log("exit building?");
+		this._exitBuilding = function(){
+			this.thunk("Exiting a " +  this.building_in.type +" building.");
+
+			this.building_in.occupancy--;
+			this.building_in = null;
+
+			this.visable = true;
+			
 		}
 
 		// common actions
+
+		this.planRouteTo = function(building){
+			this.thunk("off i go.");
+			this.movement_queue = game.map.findPath({x: this.x, y: this.y}, {x:building.x , y:building.y});
+			this.building_going_to = building;
+		}
+
+
+
 		this._goHome = function(){
-			this.movement_queue = game.map.findPath({x: this.x, y: this.y}, {x:this.home.x , y:this.home.y});
+			this.thunk("I will go to my room at <"+this.home.id+">");
+			this.planRouteTo(this.home);
+		}
+
+		this._findEducation = function(){
+			this.thunk("Goto education");
+
+			result = this.sim.findRandomStructureByType("education");
+			if(result==false)return false;
+			this.planRouteTo(result);
+		}
+		this._findFood = function(){
+			this.thunk("Goto food");
+			result = this.sim.findRandomStructureByType("food");
+			if(result==false)return false;
+			this.planRouteTo(result);
+		}
+		this._findFun = function(){
+			this.thunk("Goto fun");
+			result = this.sim.findRandomStructureByType("fun");
+			if(result==false)return false;
+			this.planRouteTo(result);
+		}
+		this._findFitness= function(){
+			this.thunk("Goto fitness");
+			result = this.sim.findRandomStructureByType("fun");
+			if(result==false)return false;
+			this.planRouteTo(result);
 		}
 
 

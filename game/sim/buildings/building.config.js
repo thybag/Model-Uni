@@ -28,7 +28,7 @@ function () {
 
 						"img": 'assets/buildings/gym.png', 
 
-						"type": "gym",
+						"type": "fitness",
 						"capacity": 40,
 						"running_costs": 900,
 						"modifiers" : {"fitness": 5, "happiness": 1, "hunger": 5}
@@ -39,11 +39,38 @@ function () {
 
 						"img": 'assets/buildings/library.png', 
 
-						"type": "library",
+						"type": "education",
 						"capacity": 500,
 						"running_costs": 900,
 						"modifiers" : {"smartness": 2, "bordem": 1,"hunger": 1}
 		},
+
+
+		'campus_shop' : {
+			"h":1,
+			"w":1,
+			type:"food"
+		},
+		'health_food_bar' : {
+			type:"food"
+		},
+		'pizza_place' : {
+			type:"food"
+		},
+		'burger_bar' : {
+			type:"food"
+		},
+
+
+		'lecture_theatre' : {
+			type:"education"
+		},
+		'bar' : {
+			type:"fun"
+		},
+		'club' : {
+			type:"fun"
+		}
 
 
 
