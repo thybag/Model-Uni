@@ -21,7 +21,9 @@ function (building_config) {
 			"student_population": 0,
 			"res_capacity": 0,
 			"acc_capacity": 0,
-			"tot_capacity": 0
+			"tot_capacity": 0,
+			// unix timestamp in ms ( *1000 to get real timestamp)
+			"time" : (new Date()).getTime()
 		}
 
 		this.buildings_config = building_config;
@@ -32,6 +34,8 @@ function (building_config) {
 		this.proto_building.prototype.sim = this.proto_student.prototype.sim = this;
 
 		this.tick = function(){
+
+			this.data.time += 1000;
 
 			for(var e=0;e<this.structures.length;e++)
 				if(this.structures[e] != null)this.structures[e].tick();
@@ -49,6 +53,23 @@ function (building_config) {
 			student._init(1, 1);
 			this.entities.students.push(student);
 			this.data.student_population++;
+		}
+
+		this.getGameDate = function(){
+			var date = {};
+
+			date._date = new Date(this.data.time);
+			console.log(date._date.getFullYear());
+			date.year = date._date.getFullYear();
+			data.month_no = date._date.getMonth();
+		    date.month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][data.month_no];
+		    date.day = date._date.getDate();
+		    date.hour = date._date.getHours();
+		    date.min = date._date.getMinutes();
+		    date.sec = date._date.getSeconds();
+			//
+			return date;
+
 		}
 
 
