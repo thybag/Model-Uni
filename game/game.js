@@ -17,6 +17,8 @@ define("game/game.js",
 	function (map) {
 		return new function() {	
 
+			this.disable_input = false;
+
 			// Load viewport
 			this.viewport = require("game/client/viewport.js");
 			// Load render
@@ -72,6 +74,8 @@ define("game/game.js",
 					game.renderer.scale(game.viewport.scale);
 
 				}, false);
+
+
 
 				// Make game resizable
 				$(window).resize(function() {
@@ -176,8 +180,9 @@ define("game/game.js",
 				return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
 			}
 
-			var disable_scroll = false;
 			this.check_inputs = function(){
+
+				var disable_scroll = this.disable_input;
 
 				var mouse = this.inputs.mouse.position;
 				var client = this.scene;
@@ -235,22 +240,19 @@ define("game/game.js",
 						}else{
 							// not demolishing
 							structure = this.map.buildingAt(selected_tile.x, selected_tile.y);
-							building = this.sim.getBuildingById(structure.id);	
-							console.log("launch building dialog");
-							console.log(building);
+							
+							if(structure !== false){
+								building = this.sim.getBuildingById(structure.id);
+								game.ui.showRoomInfoDialog(building);
+							}
+	
 
 
 						}
-
-
 					}
 				}
 
-				$(".game-ui").hover(function(){
-					disable_scroll = true;
-				},function(){
-					disable_scroll = false;
-				});
+
 
 				var move_distance = 5/this.viewport.scale;
 				

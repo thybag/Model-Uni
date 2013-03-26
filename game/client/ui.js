@@ -45,6 +45,15 @@ function () {
 
 		this.showMenu = function(){
 			this.createBuildMenu();
+			this.addMenuListener($(".game-ui"));
+		}
+
+		this.addMenuListener = function(ele){
+			ele.hover(function(){
+					game.disable_input = true;
+			},function(){
+					game.disable_input = false;
+			});
 		}
 
 		// Show save menu dialog
@@ -57,6 +66,23 @@ function () {
 		this.showHireDialog = function(){
 			var menu = this.getFragment("ui_hire_staff");
 			$(menu).modal();
+		}
+
+		// Show hire staff dialog
+		this.showInfoDialog = function(info){
+			var dlg = this.getFragment("ui_info_dialog");
+
+			$(dlg).find('.contents').text(JSON.stringify(info));
+			$(dlg).modal({"backdrop":false});
+		}
+		// Show hire staff dialog
+		this.showRoomInfoDialog = function(info){
+			var dlg = this.getFragment("ui_room_info_dialog");
+			content = this.getContent("ui_room_info_dialog_content");
+			raw = this.tpl(content, info);
+			console.log(info);
+			$(dlg).html(raw );
+			$(dlg).modal({"backdrop":false});
 		}
 
 		
@@ -107,6 +133,24 @@ function () {
 			this.staff_count = menu.find('#ui-staff-population-box');
 		}
 
+		//https://github.com/thybag/base.js/blob/master/template.js
+		this.tpl = function(template_string, data, prefix){
+			//Foreach data value
+			for(var i in data){
+				//Used for higher depth items
+				var accessor = i;
+				if(typeof prefix !== 'undefined') i = prefix+'.'+i
+				//If object, recusivly call self, else template value.
+				if(typeof data[i] === 'object'){
+					template_string = this.tpl(template_string, data[i], i);
+				}else{
+					template_string = template_string.replace(new RegExp('{'+i+'}','g'), data[accessor]);
+				}
+			}
+			//return templated HTML
+			return template_string;
+		}
+
 		// Get an HTML fragment from template file
 		this.getFragment = function(name){
 
@@ -118,7 +162,13 @@ function () {
 				$(document.body).append(itm);
 				fragments[name] = itm;
 			}
+
+			this.addMenuListener(fragments[name]);
 			return fragments[name];
+		}
+		this.getContent = function(name){
+			itm = $(template_fragments).find('#'+name);
+			return itm.html();
 		}
 
 	}

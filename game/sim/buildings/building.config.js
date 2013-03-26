@@ -13,6 +13,7 @@ function () {
 
 		// Normal tiles (generated)
 		'smallhouse' : {
+						"title": "Student flat",
 						"img": 'assets/buildings/student-flat.png', 
 						"w" : 1,
 						"h" : 1,
@@ -23,6 +24,7 @@ function () {
 		},
 		// Example (modifiers apply to those in building, per hour?)
 		'gym' : {
+						"title": "Student gym",
 						"h":2,
 						"w":2,
 
@@ -33,7 +35,8 @@ function () {
 						"running_costs": 900,
 						"modifiers" : {"fitness": 5, "happiness": 1, "hunger": 5, "bordem": -1}
 		},
-		'library' : {
+		'library' : {	
+						"title": "Library",
 						"h":15,
 						"w":5,
 

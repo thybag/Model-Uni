@@ -70,6 +70,32 @@
   </div>
 </div>
 
+<div id='ui_info_dialog' class="modal hide game-ui" style='width:300px; right:10px; left:auto; top:50px;margin-left:0;'>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Jimmy</h3>
+  </div>
+  <div class="modal-body contents">
+    <p> My Data</p>
+  </div>
+</div>
+
+<div id='ui_room_info_dialog' class="modal hide game-ui" style='width:300px; right:10px; left:auto; top:50px;margin-left:0;'></div>
+
+<script type='text/tpl' id='ui_room_info_dialog_content'>
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>{title}</h3>
+  </div>
+  <div class="modal-body contents">
+    <p>Type: {type}</p>
+    <p>Residence: {residence}</p>
+    <p>Occupance: {occupancy}</p>
+    <p>Running costs: &pound; {running_costs}</p>
+  </div>
+</script>
+
+
 <div id='ui_course' class="modal hide model-big game-ui" style='width:80%;'>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

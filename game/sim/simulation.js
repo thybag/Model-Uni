@@ -17,6 +17,7 @@ function (building_config) {
 		this.structures = [];
 		this.entities = { "students":[], "staff":[] };
 		this.data = {
+			"university_name" : "My first uni.",
 			"student_population": 0,
 			"staff_population": 0,
 			"cash": 50000,
