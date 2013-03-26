@@ -13,7 +13,8 @@ function () {
 
 		// Normal tiles (generated)
 		'trees' : {
-			"img": 'assets/tiles/grass_wtree.png',
+			"img": 'assets/decorative/trees.png',
+			"layer": true,
 			"type": "grass"
 		},
 

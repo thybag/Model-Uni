@@ -41,7 +41,14 @@ define("game/client/renderer.js",[],
 
 			// cache all tiles as sprites
 			for(tile in this.map.tiles){
+				
 				this.sprite_cache[tile] = this.scene.Sprite(this.map.tiles[tile].img, { "layer": this.layers.world });
+				
+				// If layered, sprites change settings
+				if(typeof this.map.tiles[tile].layer !== 'undefined'){
+					this.sprite_cache[tile]._baselayer = this.map.tiles[tile].type;
+					this.sprite_cache[tile].layer = this.layers.buildings;
+				}
 			}
 			// cache buildings as sprites
 			for(building in buildings_config){
@@ -122,33 +129,62 @@ define("game/client/renderer.js",[],
 			var map = this.map;
 			var tile_prop = map.tile_propeties;
 
-			var world = this.layers.world;
 			// Apply offsets
 			var tile_x = offset_x = this.viewport.x;
 			var tile_y = offset_y = this.viewport.y;
-			//ref to current tile
-			var current_tile;
 
-			world.clear();
+			//clear world
+			this.layers.world.clear();
 			this.layers.buildings.clear();
 
+			// Scope vars
+			var layer_1, 
+				layer_2, 
+				current_structure, 
+				current_tile,
+				layer_2_offset_x,
+				layer_2_offset_y;
+
+			// For each tile
 			for (var y = 0; y < map.h; y++) {
 				for (var x = 0; x < map.w; x++) {
-					current_tile = map.map[y][x];
-					//draw tile
-					this.sprite_cache[current_tile].position(tile_x, tile_y-(this.sprite_cache[current_tile].h % 65)).canvasUpdate(world);
 
-		 		 	//draw structure
-					if(typeof map.structure_map[y][x] != 'undefined' && map.structure_map[y][x] != null){
+					layer_1 = current_tile = map.map[y][x];
+					// Blank vars
+					layer_2 = false;
+					layer_2_offset_x=0;
+					layer_2_offset_y=0;
 
-						if(typeof  map.structure_map[y][x].sprite !== 'undefined'){
+					// if tile has multiple layers, use "_baselayer" as layer 1
+					if(typeof this.sprite_cache[current_tile]._baselayer !== 'undefined'){
+						layer_1 = this.sprite_cache[current_tile]._baselayer;
+						layer_2 = current_tile;
+						layer_2_offset_y = -(this.sprite_cache[current_tile].h-tile_prop.h);
+					}
+
+					// Buildings override layered tiles for access to layer_2 (sorry tiles)
+					current_structure = map.structure_map[y][x];
+					if(typeof current_structure != 'undefined' && current_structure != null){
+						if(typeof current_structure.sprite !== 'undefined'){
+
 							structure_name = map.structure_map[y][x].sprite;
 							cfg = this.buildings_config[structure_name];
 							sprite = this.sprite_cache[structure_name];
-							// draw sprite of building to "buildings" layer
-							sprite.position(tile_x-(sprite.w-tile_prop.w) + ((cfg.w-1) * tile_prop.hw), tile_y-(sprite.h-tile_prop.h)).canvasUpdate(this.layers.buildings);
+
+							layer_2 = structure_name;
+							layer_2_offset_x = -(sprite.w-tile_prop.w) + ((cfg.w-1) * tile_prop.hw);
+							layer_2_offset_y = -(sprite.h-tile_prop.h);
 						}
 					}
+
+					// Draw Layer 1 (Base tile)
+					this.sprite_cache[layer_1].position(tile_x, tile_y-(this.sprite_cache[layer_1].h - 65)).canvasUpdate();
+					
+					// Draw layer 2 if there is one.
+					if(layer_2 !== false){
+						this.sprite_cache[layer_2].position(tile_x + layer_2_offset_x, tile_y + layer_2_offset_y).canvasUpdate();
+					}
+
 		 		 	tile_x += tile_prop.hw;
 		 		 	tile_y += tile_prop.hh;
 				}
