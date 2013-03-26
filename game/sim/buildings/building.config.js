@@ -19,7 +19,7 @@ function () {
 						"type": "accommodation",
 						"capacity": 8,
 						"running_costs": 250,
-						"modifiers" : {"tiredness": -10, "hunger": 1}
+						"modifiers" : {"tiredness": -10, "hunger": 1, "bordem": 1}
 		},
 		// Example (modifiers apply to those in building, per hour?)
 		'gym' : {
@@ -31,7 +31,7 @@ function () {
 						"type": "fitness",
 						"capacity": 40,
 						"running_costs": 900,
-						"modifiers" : {"fitness": 5, "happiness": 1, "hunger": 5}
+						"modifiers" : {"fitness": 5, "happiness": 1, "hunger": 5, "bordem": -1}
 		},
 		'library' : {
 						"h":15,
@@ -42,7 +42,7 @@ function () {
 						"type": "education",
 						"capacity": 500,
 						"running_costs": 900,
-						"modifiers" : {"smartness": 2, "bordem": 1,"hunger": 1}
+						"modifiers" : {"smartness": 2, "bordem": 1, "hunger": 1}
 		},
 
 

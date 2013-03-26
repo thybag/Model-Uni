@@ -18,6 +18,8 @@ function () {
 		this.mainMenu = null;
 		this.date = null;
 		this.cash = null;
+		this.student_count = null;
+		this.staff_count = null;
 
 		// Load view file.
 		$.get("game/client/ui.html", function(html){
@@ -33,9 +35,10 @@ function () {
 			if(ticker_internal > 40){
 
 				var dt = game.sim.getGameDate();
-
 				this.date.text(dt.hour + ':' +dt.min + ' - ' + dt.day + ' ' + dt.month + ' ' +dt.year);
-
+				this.cash.text(game.sim.data.cash);
+				this.student_count.text(game.sim.data.student_population);
+				this.staff_count.text(game.sim.data.staff_population);
 				ticker_internal = 0;
 			}
 		}
@@ -100,6 +103,8 @@ function () {
 			this.mainMenu = menu;
 			this.date = menu.find('#ui-date-box');
 			this.cash = menu.find('#ui-cash-box');
+			this.student_count = menu.find('#ui-student-population-box');
+			this.staff_count = menu.find('#ui-staff-population-box');
 		}
 
 		// Get an HTML fragment from template file

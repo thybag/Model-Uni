@@ -18,6 +18,8 @@ function (building_config) {
 		this.entities = { "students":[], "staff":[] };
 		this.data = {
 			"student_population": 0,
+			"staff_population": 0,
+			"cash": 50000,
 			"res_capacity": 0,
 			"acc_capacity": 0,
 			"tot_capacity": 0,
@@ -36,10 +38,24 @@ function (building_config) {
 		this.proto_building.prototype.sim = this.proto_student.prototype.sim = this;
 
 		this.tick = function(){
+			// Do want want to create a new student
+			
 
 			// sync clock
-			if(this.counter > 500){this.data.time += 3600000; this.counter=0;}this.counter++;
+			if(this.counter > 400){
+				this.data.time += 3600000; this.counter=0;
+
+				if(this.data.student_population < this.data.tot_capacity){
+					console.log("student chance");
+					if(Math.floor(Math.random()*5) == 2){
+						this.createStudent();
+						console.log("student lives!");
+					}
+				}
+
+			}this.counter++;
 			
+			// tick structures
 			for(var e=0;e<this.structures.length;e++)
 				if(this.structures[e] != null)this.structures[e].tick();
 
@@ -48,7 +64,7 @@ function (building_config) {
 				if(this.entities.students[i] != null)this.entities.students[i].tick();
 
 			for(var i=0;i<this.entities.staff.length;i++)
-				this.entities.staff[i].tick();
+				if(this.entities.staff[i] != null)this.entities.staff[i].tick();
 		}
 
 		this.createStudent = function(x, y){
