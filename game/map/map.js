@@ -200,8 +200,9 @@ function (gen, tiles) {
 					//  no change?
 					tile = new_tile;
 				}
-
+				// Update tile & graphnode (for path finding)
 				this.map[x][y] = tile;
+				this.graph.nodes[x][y] = new GraphNode(x, y, tiledata.cost);
 
 				// trigger changes on near by tiles if this tile has changed
 				if(tile != original_tile){

@@ -52,19 +52,20 @@ function () {
 		'structure' : {
 			//"img": 'assets/tiles/dirtDouble.png',
 			"img": 'assets/tiles/grass.png',
-			"type": "grass",
+			"cost": 500,
 			"editable": false
 		},
 
 		// placeable tiles
 		'grass' : {
 			"img": 'assets/tiles/grass.png',
-			"type": "grass"
+			"type": "grass",
+			"cost": 5,
 		},
 		'road' : {
 			"img": 'assets/tiles/road.png',
 			"type": 'road',
-			"listeners": {},
+			"cost": 1,
 			"findTile": function(left, top, right, bottom){
 
 				var join_left 	= 	(tiles[left].type == "road" || tiles[left].type == "big_road" ),
@@ -108,6 +109,7 @@ function () {
 		'big_road': {
 			"img": 'assets/tiles/road.png',
 			"type": 'bigroad',
+			"cost": 1,
 			"findTile": function(left, top, right, bottom){
 
 				var join_left 	= 	(tiles[left].type == "road"),
