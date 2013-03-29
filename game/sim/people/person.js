@@ -23,15 +23,10 @@ function () {
 			this.init(x, y);
 		}
 
-
-
-
 		// This should be overwritten
 		this.tick = function(){
 
 		}
-
-
 
 		// Thoughts
 		this.complaints = [];
