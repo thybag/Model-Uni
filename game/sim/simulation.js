@@ -36,6 +36,9 @@ function (building_config) {
 		this.proto_building = require("game/sim/buildings/building.js");
 		this.proto_student = require("game/sim/people/student.js");
 
+		// Time between "World Actions"
+		this.action_tick = -1;//100 = standard
+
 		// prototypes all have references to "simulation"
 		this.proto_building.prototype.sim = this.proto_student.prototype.sim = this;
 
@@ -44,7 +47,7 @@ function (building_config) {
 
 
 			// sync clock
-			if(this.counter > 400){
+			if(this.action_tick != -1 && this.counter > (this.action_tick/5)){
 
 				// new year at start of term, induct freashers
 				if(this.data.time == this.data.next_year_time) this._newYear();

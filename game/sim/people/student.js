@@ -43,7 +43,7 @@ function (person) {
 		this.thunk = function(msg){if(this.thunk_loudly) console.log('['+this.name+'] ' +msg);}
 
 		this.is_action_tick = function(){
-			t = (this.counter > 100);
+			t = (this.counter > this.sim.critical_tick);
 			if(t)this.counter=0;
 
 			return t;
