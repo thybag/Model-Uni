@@ -84,6 +84,10 @@ define("game/client/renderer.js",[],
 		// Use counter step (100 steps between action) combined with direction
 		// to twean move animations for humans
 		this.findHumanAnimationStep = function(move_percent, direction){
+
+			// Dont animate when time is stopped
+			if(game.sim.action_tick == -1) return {x:50,y:25};
+
 			x = move_percent = move_percent/2;
 			y = move_percent/2;
 			//down is already correct

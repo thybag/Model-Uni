@@ -129,6 +129,12 @@ function () {
 			});
 			menu.show();
 
+			menu.find(".speed-control").find("i").click(function(){
+				game.sim.action_tick= parseInt($(this).attr("data-time"));
+				console.log(game.sim.action_tick);
+			});
+
+
 			this.mainMenu = menu;
 			this.date = menu.find('#ui-date-box');
 			this.cash = menu.find('#ui-cash-box');
