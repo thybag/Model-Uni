@@ -25,7 +25,8 @@ function (building_config) {
 			"acc_capacity": 0,
 			"tot_capacity": 0,
 			// unix timestamp in ms ( *1000 to get real timestamp)
-			"time" : (new Date()).getTime()
+			"time" : (new Date()).getTime(),
+			"next_year_time": '1364266319756'
 		}
 
 		// internals 
@@ -40,19 +41,24 @@ function (building_config) {
 
 		this.tick = function(){
 			// Do want want to create a new student
-			
+
 
 			// sync clock
 			if(this.counter > 400){
-				this.data.time += 3600000; this.counter=0;
 
+				// new year at start of term, induct freashers
+				if(this.data.time == this.data.next_year_time) this._newYear();
+				console.log(this.data.time, this.data.next_year_time)
+
+				this.data.time += 3600000; this.counter=0;
+				/*
 				if(this.data.student_population < this.data.tot_capacity){
 					console.log("student chance");
 					if(Math.floor(Math.random()*5) == 2){
 						this.createStudent();
 						console.log("student lives!");
 					}
-				}
+				}*/
 
 			}this.counter++;
 			
@@ -67,6 +73,31 @@ function (building_config) {
 			for(var i=0;i<this.entities.staff.length;i++)
 				if(this.entities.staff[i] != null)this.entities.staff[i].tick();
 		}
+
+
+		this._newYear = function(){
+			console.log("INDUCT!");
+			// work out 1 year time..
+			this.data.next_year_time = this.data.next_year_time+1000000;
+			// roll over current students
+			for(var i=0;i<this.entities.students;i++){
+				if(this.entities.students[i] !== null) this.entities.students[i].enterNextYear();
+			}
+
+			// Induction math
+			// how many people can come? (course spaces etc)
+			// for now just use "homes"
+			places = this.data.tot_capacity - this.data.student_population;	
+
+			// induct!
+			for(var i=0;i<places;i++){
+				setTimeout(function(){
+					game.sim.createStudent();
+				},(i*80));
+			}
+
+		}
+
 
 		this.createStudent = function(x, y){
 			student = new this.proto_student();
@@ -143,7 +174,7 @@ function (building_config) {
 				if(typeof is_free == 'undefined'){
 					if(s !== null && s.type == type) results.push(s);
 				}else{
-					if(s !== null && s.type == type && s.capacity > s.occupancy) results.push(s);
+					if(s !== null && s.type == type && s.capacity > s.residence) results.push(s);
 				}
 				
 			}
@@ -160,8 +191,16 @@ function (building_config) {
 		// Format data for save
 		this.forSave = function(){
 			var tmp = {};
-			tmp.entities = this.entities;
+
+			tmp.entities = {"students": []};
 			tmp.structures = this.structures;
+
+			for(var s in this.entities.students){
+				student = this.entities.students[s];
+				if(student != null) student = student._save();
+				tmp.entities.students.push(student);
+			}
+		
 			tmp.data = this.data;
 
 			return tmp;
@@ -182,6 +221,20 @@ function (building_config) {
 				}
 				this.structures.push(val);
 			}
+
+			//reload students
+
+			for(itm in data.entities.students){
+				student = student_data = data.entities.students[itm];
+
+				if( student != null){
+					student = new this.proto_student();
+					student._load(student_data);
+				}
+				this.entities.students.push(student);
+			}
+			
+
 		}
 	}
 });

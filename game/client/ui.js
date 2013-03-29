@@ -20,6 +20,7 @@ function () {
 		this.cash = null;
 		this.student_count = null;
 		this.staff_count = null;
+		this.debug = null;
 
 		// Load view file.
 		$.get("game/client/ui.html", function(html){
@@ -40,6 +41,8 @@ function () {
 				this.student_count.text(game.sim.data.student_population);
 				this.staff_count.text(game.sim.data.staff_population);
 				ticker_internal = 0;
+
+				this.debug.text(game.ticker.fps);
 			}
 		}
 
@@ -131,6 +134,8 @@ function () {
 			this.cash = menu.find('#ui-cash-box');
 			this.student_count = menu.find('#ui-student-population-box');
 			this.staff_count = menu.find('#ui-staff-population-box');
+
+			this.debug = $("#debug_fps");
 		}
 
 		//https://github.com/thybag/base.js/blob/master/template.js

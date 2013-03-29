@@ -79,7 +79,10 @@ function (person) {
 
 			// assign home
 			possible_homes = this.sim.findStructureByType("accommodation", true);
-			this.home = possible_homes[this.rand(possible_homes.length)-1]
+			if(possible_homes.length === 0){
+				console.log("no homes!");
+			}
+			this.home = possible_homes[this.rand(possible_homes.length)-1];
 			this.home.residence++;
 
 			//offset slighly
@@ -90,6 +93,36 @@ function (person) {
 
 			//first action
 			this._goHome();
+		}
+
+		this._load = function(data){
+
+			console.log(data);
+			for(var opt in data) this[opt] = data[opt];
+
+			//relink real objects
+			this.course = this.sim.courses[data.course];
+			this.home = this.sim.structures[data.home];
+
+			if(this.building_going_to != null) this.building_going_to = this.sim.structures[this.building_going_to];
+			if(this.building_in != null) this.building_in  = this.sim.structures[this.building_in];
+
+			console.log(this);
+		}
+		this._save = function(){
+			data = {};
+			// Grab all attributes
+			for(var opt in this) data[opt] = this[opt];
+
+			// convert to ids
+			data.course = this.course.id;
+			data.home = this.home.id;
+			if(this.building_going_to != null) data.building_going_to = this.building_going_to.id;
+			if(this.building_in != null) data.building_in  = this.building_in.id;
+
+			delete data.sim;
+
+			return data;
 		}
 
 		this.action_tick = function(){
@@ -225,6 +258,14 @@ function (person) {
 			this.happiness -= 5; // Not being able to do what they want makes AI's sad
 			// Nothing todo? back to bed
 			this._goHome();
+		}
+
+		this.enterNextYear = function(){
+
+			// this.year++;
+			// if(this.year > 3) this.graduate()!
+
+
 		}
 
 		this._enterBuilding = function(){

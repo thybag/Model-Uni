@@ -48,8 +48,8 @@ require(["./vendor/spritejs/sprite.js","./game/game.js", "./vendor/store.js"], f
 			// Start game loop
 			var ticker = scene.Ticker(function() {
 				game.tick(); 
-			}).run();
-
+			});
+			ticker.run();
 			// Give game access to ticker
 			game.ticker = ticker;
 		});
