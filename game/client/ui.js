@@ -130,7 +130,9 @@ function () {
 			menu.show();
 
 			menu.find(".speed-control").find("i").click(function(){
-				game.sim.action_tick= parseInt($(this).attr("data-time"));
+				game.sim.action_tick = parseInt($(this).attr("data-time"));
+				$(this).parent().find("i").css("backgroundColor", "#fff").removeClass("icon-white");
+				$(this).css("backgroundColor", "#000").addClass("icon-white");
 				console.log(game.sim.action_tick);
 			});
 

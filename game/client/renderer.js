@@ -88,6 +88,8 @@ define("game/client/renderer.js",[],
 			// Dont animate when time is stopped
 			if(game.sim.action_tick == -1) return {x:50,y:25};
 
+			move_percent = (move_percent/game.sim.action_tick) *100;
+
 			x = move_percent = move_percent/2;
 			y = move_percent/2;
 			//down is already correct

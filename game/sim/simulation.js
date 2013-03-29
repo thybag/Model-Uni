@@ -25,8 +25,8 @@ function (building_config) {
 			"acc_capacity": 0,
 			"tot_capacity": 0,
 			// unix timestamp in ms ( *1000 to get real timestamp)
-			"time" : (new Date()).getTime(),
-			"next_year_time": '1364266319756'
+			"time" : 1379620800000, // 19 sept 2013
+			"next_year_time": 1379707200000 // 20 sept 2013 (first academic year)
 		}
 
 		// internals 
@@ -47,7 +47,7 @@ function (building_config) {
 
 
 			// sync clock
-			if(this.action_tick != -1 && this.counter > (this.action_tick/5)){
+			if(this.action_tick != -1 && this.counter > (this.action_tick/2)){
 
 				// new year at start of term, induct freashers
 				if(this.data.time == this.data.next_year_time) this._newYear();
@@ -81,7 +81,7 @@ function (building_config) {
 		this._newYear = function(){
 			console.log("INDUCT!");
 			// work out 1 year time..
-			this.data.next_year_time = this.data.next_year_time+1000000;
+			this.data.next_year_time = this.data.next_year_time+31536000;
 			// roll over current students
 			for(var i=0;i<this.entities.students;i++){
 				if(this.entities.students[i] !== null) this.entities.students[i].enterNextYear();
