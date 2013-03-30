@@ -58,31 +58,6 @@
 			</div>
 		</div>
 	</div>
-
-</div>
-
-<div id='ui_save_dialog' class="modal hide game-ui">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>Save</h3>
-  </div>
-  <div class="modal-body">
-    <p>Save slot 1</p>
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn" onclick="$(this).parent().parent().hide();">Close</a>
-    <a href="#" class="btn btn-primary disabled">Save Game</a>
-  </div>
-</div>
-
-<div id='ui_info_dialog' class="modal hide game-ui" style='width:300px; right:10px; left:auto; top:50px;margin-left:0;'>
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>Jimmy</h3>
-  </div>
-  <div class="modal-body contents">
-    <p> My Data</p>
-  </div>
 </div>
 
 <script type='text/tpl' id='ui_room_info_dialog_content'>
@@ -99,6 +74,53 @@
   </div>
 </div>
 </script>
+
+<div id='ui_newgame' class="modal hide game-ui" style='width:90%;left:5%;margin-left:0px'>
+  <div class="modal-header">
+    <h3>Welcome to Model Uni</h3>
+  </div>
+  <div class="modal-body">
+    <p>The University simulation game. Found your university, build the campus, hire the staff and set the courses. Then attempt to make a profit without the staff revolting over lack of car parking and the students sleeping through all their lectures.</p>
+    <strong>Before you start</strong>
+    <p>What do you want to name your new university?</p>
+    	<input name='uni-name' type='text' value='My first Uni' class="uniname input-xxlarge"/>
+   
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary newgame">New Game</a>
+  </div>
+</div>
+
+
+
+
+
+
+<div id='ui_save_dialog' class="modal hide game-ui">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Save</h3>
+  </div>
+  <div class="modal-body">
+    <p>Save slot 1</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" onclick="$(this).parent().parent().modal('hide');">Close</a>
+    <a href="#" class="btn btn-primary disabled">Save Game</a>
+  </div>
+</div>
+
+<div id='ui_info_dialog' class="modal hide game-ui" style='width:300px; right:10px; left:auto; top:50px;margin-left:0;'>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Jimmy</h3>
+  </div>
+  <div class="modal-body contents">
+    <p> My Data</p>
+  </div>
+</div>
+
+
 
 
 <div id='ui_course' class="modal hide model-big game-ui" style='width:80%;'>

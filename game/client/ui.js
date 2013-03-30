@@ -6,7 +6,7 @@
  */
 define("game/client/ui.js",
 	[
-	"//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js",
+	"vendor/bootstrap/bootstrap.min.js",
 	"vendor/drag.lite.js"
 	],
 
@@ -52,6 +52,25 @@ function () {
 		this.init = function(){
 			this.createBuildMenu();
 			this.addMenuListener($(".game-ui"));
+		}
+
+		this.newGame = function(){
+			game.disable_input = true;
+			var menu = this.getFragment("ui_newgame", true);
+
+			menu.find('a.newgame').click(function(){
+
+				game.sim.data.university_name = menu.find('input.uniname').val();
+				menu.modal('hide');
+				menu.remove();
+				$('#uni-title').text(game.sim.data.university_name);
+				game.disable_input = false;
+			})
+			
+			$(menu).modal({
+				backdrop: 'static',
+			  	keyboard: false
+			});
 		}
 
 		this.addMenuListener = function(ele){
@@ -195,7 +214,7 @@ function () {
 		}
 
 		// Get an HTML fragment from template file
-		this.getFragment = function(name){
+		this.getFragment = function(name, disable_listener){
 
 			if(typeof fragments[name] === 'undefined'){
 				//console.log(template_fragments.getElementById(name));
@@ -206,7 +225,7 @@ function () {
 				fragments[name] = itm;
 			}
 
-			this.addMenuListener(fragments[name]);
+			if(typeof disable_listener == 'undefined') this.addMenuListener(fragments[name]);
 			return fragments[name];
 		}
 		this.getContent = function(name){

@@ -100,6 +100,11 @@ define("game/game.js",
 
 				// Show build Menu
 				this.ui.init();
+				if(!this.has_saves()){
+					this.ui.newGame();//ui_newgame
+				}else{
+					$('#uni-title').text(this.sim.data.university_name);
+				}
 			}
 			
 			/** 

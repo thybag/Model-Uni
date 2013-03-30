@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Model-Uni - Create and run your own University!</title>
 
-    <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='vendor/bootstrap/bootstrap.min.css' />
 
 	<style>
 	    body {
@@ -64,7 +64,7 @@
 <body>
 	<div class="navbar navbar-inverse game-ui">
 	  <div class="navbar-inner">
-	    	<a class="brand" href="#">Model Uni</a>
+	    	<a class="brand" href="#">Model Uni: <span style='font-size:0.9em;' id='uni-title'>My First Uni</span></a>
 	     <ul class="nav pull-right">
 	     	  <li><a href="#">Courses</a></li>
 	     	  <li><a href="#" onclick="game.ui.showHireDialog();">Staff</a></li>
@@ -85,7 +85,7 @@
 	  </div>
 
 
-	<div style='position:absolute;bottom:0px;right:0px;z-index:999; padding:4px; '> 
+	<div style='position:absolute;bottom:2px;right:0px;z-index:999; padding:4px; '> 
 		<span id='debug_fps'></span>FPS - 
 		<a style='color:#000;' target='_blank' href='credits.txt'>credits </a>
 	</div>
