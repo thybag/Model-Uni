@@ -6,7 +6,7 @@ require(["./vendor/spritejs/sprite.js","./game/game.js", "./vendor/store.js"], f
 	window.store = store;
 
 	// Setup sprite.js and create layers
-	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h':  window.innerHeight-30});
+	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h':  window.innerHeight-42});
 
 	// Load images
 	scene.loadImages([

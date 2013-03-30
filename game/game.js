@@ -99,7 +99,7 @@ define("game/game.js",
 				});
 
 				// Show build Menu
-				this.ui.showMenu();
+				this.ui.init();
 			}
 			
 			/** 

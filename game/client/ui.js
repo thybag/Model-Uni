@@ -5,7 +5,10 @@
  * @package	model-uni
  */
 define("game/client/ui.js",
-	["//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"],
+	[
+	"//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js",
+	"vendor/drag.lite.js"
+	],
 
 function () {
 	return new function() {
@@ -46,7 +49,7 @@ function () {
 			}
 		}
 
-		this.showMenu = function(){
+		this.init = function(){
 			this.createBuildMenu();
 			this.addMenuListener($(".game-ui"));
 		}
@@ -80,12 +83,26 @@ function () {
 		}
 		// Show hire staff dialog
 		this.showRoomInfoDialog = function(info){
-			var dlg = this.getFragment("ui_room_info_dialog");
-			content = this.getContent("ui_room_info_dialog_content");
-			raw = this.tpl(content, info);
-			console.log(info);
-			$(dlg).html(raw );
-			$(dlg).modal({"backdrop":false});
+
+			this.dialog("ui_room_info_dialog_content", info);
+			//var content = this.getContent("ui_room_info_dialog_content");
+			//dialog = $(this.template(content, info));
+			//$("body").append(dialog);
+			//$(dialog).draggable().modal({"backdrop":false});
+			//this.addMenuListener($(dialog));
+		}
+
+		this.dialog = function(template_name, data){
+			var content = this.getContent("ui_room_info_dialog_content");
+			var dialog = $(this.template(content, data));
+			$("body").append(dialog);
+			dialog.draggable().modal({"backdrop":false}).on('hidden', function () {
+			  	dialog.remove();
+			  	game.disable_input = false;
+			});
+			this.addMenuListener(dialog);
+
+			return dialog;
 		}
 
 		
@@ -127,7 +144,7 @@ function () {
 					game.user.selected = "grass";
 				}
 			});
-			menu.show();
+			menu.show().draggable();
 
 			menu.find(".speed-control").find("i").click(function(){
 				game.sim.action_tick = parseInt($(this).attr("data-time"));
@@ -146,35 +163,7 @@ function () {
 			this.debug = $("#debug_fps");
 
 
-			//http://forum.jquery.com/topic/quick-draggable-without-need-for-jqueryui
-			var drag_data = {};
-			$(function(){
-				var mousemove=function (e) {
-					var data = drag_data;
-					game.disable_input = true;
-					if (data.down) {
-						$(data.el).css({
-							left: e.clientX - data.oX,
-							top: e.clientY - data.oY
-						})
-					}
-				}
-				$('.game-ui').on({
-					mousedown: function (e) {
-						drag_data = {
-							down:true,
-							oX: e.offsetX,
-							oY: e.offsetY,
-							el:this
-						}
-						$(window).on('mousemove',mousemove);
-					},
-					mouseup: function () {
-						drag_data.down = false;
-						$(window).off('mousemove',mousemove);
-					},
-				})
-			})
+
 
 
 
@@ -198,6 +187,11 @@ function () {
 			}
 			//return templated HTML
 			return template_string;
+		}
+		this.template = function(template_string, data){
+			var node = document.createElement('div');
+			node.innerHTML = this.tpl(template_string, data);
+			return node.children;
 		}
 
 		// Get an HTML fragment from template file

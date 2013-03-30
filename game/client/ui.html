@@ -1,6 +1,6 @@
 <div id='ui_build_menu' class='ui-element game-ui' style='top:50px;left:10px;'>
 	<ul class="dropdown-menu" style='display:block;width:200px;position: static;'>
-		<li><strong style='padding:15px;'>Construction Menu</strong></li>
+		<li><strong style='padding:5px 15px;' class='drag-handle'>Construction Menu</strong></li>
 		<li class="divider"></li>
 
 
@@ -85,12 +85,11 @@
   </div>
 </div>
 
-<div id='ui_room_info_dialog' class="modal hide game-ui" style='width:300px; right:10px; left:auto; top:50px;margin-left:0;'></div>
-
 <script type='text/tpl' id='ui_room_info_dialog_content'>
+<div class="modal game-ui" style='width:300px; right:10px; left:auto; top:50px;margin-left:0;'>
  <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>{title}</h3>
+    <h3 class='drag-handle'>{title}</h3>
   </div>
   <div class="modal-body contents">
     <p>Type: {type}</p>
@@ -98,6 +97,7 @@
     <p>Occupance: {occupancy}</p>
     <p>Running costs: &pound; {running_costs}</p>
   </div>
+</div>
 </script>
 
 
