@@ -182,13 +182,15 @@ define("game/game.js",
 
 			this.check_inputs = function(){
 
-				var disable_scroll = this.disable_input;
+
+				if(this.disable_input)return;
 
 				var mouse = this.inputs.mouse.position;
 				var client = this.scene;
 				var edge_boundry = 50;
 				
 				var selected_tile = this.findTileAt(mouse.x, mouse.y);
+				var tile_is_clear = this.map.isTileClear(selected_tile.x, selected_tile.y);
 
 				// Show curosr
 				if(this.viewport.selected_tile.x != selected_tile.x || this.viewport.selected_tile.y != selected_tile.y){
@@ -198,28 +200,41 @@ define("game/game.js",
 					this.viewport.selected_tile = selected_tile;
     				this.viewport.dirty = true;
 				}
-				
+
+				// Single click actions
+				if(this.inputs.mouse.click){
+
+					if(tile_is_clear){
+						//If building a building
+						if(this.user.selection_type == 'building'){
+								var build = this.sim.createBuilding(selected_tile.x, selected_tile.y, this.user.selected);
+								this.map.placeBuilding(build);
+								this.viewport.dirty = true;
+						}
+
+					}else{
+						// Dialogs
+						structure = this.map.buildingAt(selected_tile.x, selected_tile.y);
+						if(structure !== false){
+							building = this.sim.getBuildingById(structure.id);
+							game.ui.showRoomInfoDialog(building);
+						}
+					}
+				}
+				// Drag actions (if click action didnt take place)
 				if(this.inputs.mousedown) {
 
-					if(disable_scroll)return;
-
 					// If tile is clear
-					if(this.map.isTileClear(selected_tile.x, selected_tile.y)){
+					if(tile_is_clear){
 
 						if(this.user.selection_type == 'tile'){
 							// if tile, attempt to place
 							this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
 							this.viewport.dirty = true;
-						}else if(this.user.selection_type == 'building'){
-
-							// @todo: buildings are fat, check tiles behind them are free
-
-							var build = this.sim.createBuilding(selected_tile.x, selected_tile.y, this.user.selected);
-							this.map.placeBuilding(build);
-							this.viewport.dirty = true;
 						}
 
 					}else{	
+
 						// cant build here - but if we are demolishing
 						if(this.user.selection_type == 'demolish'){
 
@@ -237,35 +252,22 @@ define("game/game.js",
 								this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
 							}
 							this.viewport.dirty = true;
-						}else{
-							// not demolishing
-							structure = this.map.buildingAt(selected_tile.x, selected_tile.y);
-							
-							if(structure !== false){
-								building = this.sim.getBuildingById(structure.id);
-								game.ui.showRoomInfoDialog(building);
-							}
-	
-
-
 						}
 					}
 				}
-
-
-
+				// Detect movement
 				var move_distance = 5/this.viewport.scale;
 				
-				if(mouse.x < edge_boundry  && !disable_scroll){
+				if(mouse.x < edge_boundry){
 					this.viewport.x += move_distance;
 				} 
-				if(mouse.x > client.w-edge_boundry && !disable_scroll){
+				if(mouse.x > client.w-edge_boundry){
 					this.viewport.x -= move_distance;
 				}
-				if(mouse.y < edge_boundry && !disable_scroll){
+				if(mouse.y < edge_boundry){
 					this.viewport.y += move_distance;
 				} 
-				if(mouse.y > client.h-edge_boundry-40 && !disable_scroll){
+				if(mouse.y > client.h-edge_boundry-40){
 					this.viewport.y -= move_distance;
 				}
 
