@@ -144,6 +144,42 @@ function () {
 			this.staff_count = menu.find('#ui-staff-population-box');
 
 			this.debug = $("#debug_fps");
+
+
+			//http://forum.jquery.com/topic/quick-draggable-without-need-for-jqueryui
+			var drag_data = {};
+			$(function(){
+				var mousemove=function (e) {
+					var data = drag_data;
+					game.disable_input = true;
+					if (data.down) {
+						$(data.el).css({
+							left: e.clientX - data.oX,
+							top: e.clientY - data.oY
+						})
+					}
+				}
+				$('.game-ui').on({
+					mousedown: function (e) {
+						drag_data = {
+							down:true,
+							oX: e.offsetX,
+							oY: e.offsetY,
+							el:this
+						}
+						$(window).on('mousemove',mousemove);
+					},
+					mouseup: function () {
+						drag_data.down = false;
+						$(window).off('mousemove',mousemove);
+					},
+				})
+			})
+
+
+
+
+
 		}
 
 		//https://github.com/thybag/base.js/blob/master/template.js
