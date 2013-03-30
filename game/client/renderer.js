@@ -85,8 +85,9 @@ define("game/client/renderer.js",[],
 		// to twean move animations for humans
 		this.findHumanAnimationStep = function(move_percent, direction){
 
+			
 			// Dont animate when time is stopped
-			if(game.sim.action_tick == -1) return {x:50,y:25};
+			if(game.sim.action_tick == -1 || direction === false) return {x:50,y:25};
 
 			move_percent = (move_percent/game.sim.action_tick) *100;
 

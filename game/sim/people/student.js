@@ -279,6 +279,10 @@ function (person) {
 		}
 		this._exitBuilding = function(){
 			this.thunk("Exiting <" +  this.building_in.type +"> building.");
+			//set que to last on panel, from building
+			//this.movement_queue = game.map.findPath({x:this.building_in.x , y:this.building_in.y}, {x: this.x, y: this.y});
+			//this.x = this.building_in.x;
+			//this.y = this.building_in.y;
 
 			this.building_in.occupancy--;
 			this.building_in = null;

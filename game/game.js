@@ -316,7 +316,8 @@ define("game/game.js",
 				}
 			}
 			this.new_game = function(){
-				this.map.new(50,50);
+				store.clear();
+				document.location.reload();
 			}
 		}		
 	}
