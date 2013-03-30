@@ -210,6 +210,7 @@ define("game/game.js",
 								var build = this.sim.createBuilding(selected_tile.x, selected_tile.y, this.user.selected);
 								this.map.placeBuilding(build);
 								this.viewport.dirty = true;
+								this.sim.cash.spend(build.cost);
 						}
 
 					}else{
@@ -230,6 +231,8 @@ define("game/game.js",
 						if(this.user.selection_type == 'tile'){
 							// if tile, attempt to place
 							this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
+
+							this.sim.cash.spend(this.map.findTileCost(this.user.selected));
 							this.viewport.dirty = true;
 						}
 
@@ -248,8 +251,10 @@ define("game/game.js",
 								// Remove from map
 								this.sim.removeBuilding(building);
 								this.map.removeBuilding(building);
+								this.sim.cash.spend(500);
 							}else{
 								this.map.updateTile(selected_tile.x, selected_tile.y, this.user.selected);
+								this.sim.cash.spend(5);//demolishing costs monies
 							}
 							this.viewport.dirty = true;
 						}

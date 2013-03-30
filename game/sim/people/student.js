@@ -97,7 +97,6 @@ function (person) {
 
 		this._load = function(data){
 
-			console.log(data);
 			for(var opt in data) this[opt] = data[opt];
 
 			//relink real objects
@@ -107,7 +106,6 @@ function (person) {
 			if(this.building_going_to != null) this.building_going_to = this.sim.structures[this.building_going_to];
 			if(this.building_in != null) this.building_in  = this.sim.structures[this.building_in];
 
-			console.log(this);
 		}
 		this._save = function(){
 			data = {};

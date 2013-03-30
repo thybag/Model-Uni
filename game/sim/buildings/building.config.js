@@ -19,6 +19,7 @@ function () {
 						"h" : 1,
 						"type": "accommodation",
 						"capacity": 8,
+						"cost": 5000,
 						"running_costs": 250,
 						"modifiers" : {"tiredness": -10, "hunger": 1, "bordem": 1}
 		},
@@ -32,6 +33,7 @@ function () {
 
 						"type": "fitness",
 						"capacity": 40,
+						"cost": 8000,
 						"running_costs": 900,
 						"modifiers" : {"fitness": 5, "happiness": 1, "hunger": 5, "bordem": -1}
 		},
@@ -44,6 +46,7 @@ function () {
 
 						"type": "education",
 						"capacity": 500,
+						"cost": 20000,
 						"running_costs": 900,
 						"modifiers" : {"smartness": 2, "bordem": 1, "hunger": 1}
 		},

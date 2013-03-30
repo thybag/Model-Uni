@@ -15,7 +15,8 @@ function () {
 		'trees' : {
 			"img": 'assets/decorative/trees.png',
 			"layer": true,
-			"type": "grass"
+			"type": "grass",
+			"cost": 150
 		},
 
 		'lot_w' : {"img": 'assets/tiles/lotW.png',"type": 'big_road', "editable": false},
@@ -52,20 +53,23 @@ function () {
 		'structure' : {
 			//"img": 'assets/tiles/dirtDouble.png',
 			"img": 'assets/tiles/grass.png',
-			"cost": 500,
-			"editable": false
+			"terrain_cost": 500,
+			"editable": false,
+			"cost": 0,
 		},
 
 		// placeable tiles
 		'grass' : {
 			"img": 'assets/tiles/grass.png',
 			"type": "grass",
-			"cost": 5,
+			"terrain_cost": 5,
+			"cost": 2
 		},
 		'road' : {
 			"img": 'assets/tiles/road.png',
 			"type": 'road',
-			"cost": 1,
+			"terrain_cost": 1,
+			"cost": 50,
 			"findTile": function(left, top, right, bottom){
 
 				var join_left 	= 	(tiles[left].type == "road" || tiles[left].type == "big_road" ),
@@ -109,7 +113,8 @@ function () {
 		'big_road': {
 			"img": 'assets/tiles/road.png',
 			"type": 'bigroad',
-			"cost": 1,
+			"terrain_cost": 1,
+			"cost": 0,
 			"findTile": function(left, top, right, bottom){
 
 				var join_left 	= 	(tiles[left].type == "road"),

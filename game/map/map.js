@@ -163,6 +163,21 @@ function (gen, tiles) {
 			return (tile !== false && tile == 'grass');
 		}
 
+		this.tileData = function(tile_type){
+			// If has type, return that 
+			if(typeof this.tiles[tile_type].type !== 'undefined') return this.tiles[this.tiles[tile_type].type];
+			// else, send directy
+			return this.tiles[tile_type];
+		}
+		this.findTileCost = function(tile_type){
+			// if has cost, use it
+			if(typeof this.tiles[tile_type].cost !== 'undefined') return this.tiles[tile_type].cost;
+			// if has type, ask for cost
+			if(typeof this.tiles[tile_type].type !== 'undefined') return this.tiles[this.tiles[tile_type].type].cost;
+
+			return null;
+		}
+
 		/**
 		 * updateTile
 		 * Place new tile on to map, validting position, editability of tile & propegating changes
@@ -200,9 +215,10 @@ function (gen, tiles) {
 					//  no change?
 					tile = new_tile;
 				}
+
 				// Update tile & graphnode (for path finding)
 				this.map[x][y] = tile;
-				this.graph.nodes[x][y] = new GraphNode(x, y, tiledata.cost);
+				this.graph.nodes[x][y] = new GraphNode(x, y, tiledata.terrain_cost);
 
 				// trigger changes on near by tiles if this tile has changed
 				if(tile != original_tile){

@@ -2,16 +2,17 @@
  	[
 	 	"game/sim/buildings/building.config.js",
 	 	"game/sim/buildings/building.js",
-	 	"game/sim/people/student.js"
+	 	"game/sim/people/student.js",
+	 	"game/sim/cash.js"
  	],
 // content
 function (building_config) {
 	return new function(){
 
 		this.courses = [
-			{"name":"math", "lectures":["james","tim"]  }, 
-			{"name":"english", "lectures":["zim"]  },
-			{"name":"Computer Science", "lectures":["Bob"]  }
+			{"id":0, "name":"math", "lectures":["james","tim"]  }, 
+			{"id":1,"name":"english", "lectures":["zim"]  },
+			{"id":2,"name":"Computer Science", "lectures":["Bob"]  }
 		];
 
 		this.structures = [];
@@ -20,7 +21,6 @@ function (building_config) {
 			"university_name" : "My first uni.",
 			"student_population": 0,
 			"staff_population": 0,
-			"cash": 50000,
 			"res_capacity": 0,
 			"acc_capacity": 0,
 			"tot_capacity": 0,
@@ -28,6 +28,8 @@ function (building_config) {
 			"time" : 1379620800000, // 19 sept 2013
 			"next_year_time": 1379707200000 // 20 sept 2013 (first academic year)
 		}
+
+		this.cash = require("game/sim/cash.js");
 
 		// internals 
 		this.counter = 0;
@@ -51,17 +53,8 @@ function (building_config) {
 
 				// new year at start of term, induct freashers
 				if(this.data.time == this.data.next_year_time) this._newYear();
-				console.log(this.data.time, this.data.next_year_time)
 
 				this.data.time += 3600000; this.counter=0;
-				/*
-				if(this.data.student_population < this.data.tot_capacity){
-					console.log("student chance");
-					if(Math.floor(Math.random()*5) == 2){
-						this.createStudent();
-						console.log("student lives!");
-					}
-				}*/
 
 			}this.counter++;
 			
@@ -197,6 +190,7 @@ function (building_config) {
 
 			tmp.entities = {"students": []};
 			tmp.structures = this.structures;
+			tmp.total_cash = this.cash.total;
 
 			for(var s in this.entities.students){
 				student = this.entities.students[s];
@@ -213,6 +207,8 @@ function (building_config) {
 
 			// repop "data"
 			this.data = data.data;
+			this.cash.total = data.total_cash;
+
 			// repop structures
 			for(itm in data.structures){
 

@@ -37,7 +37,7 @@ function () {
 
 				var dt = game.sim.getGameDate();
 				this.date.text(dt.hour + ':' +dt.min + ' - ' + dt.day + ' ' + dt.month + ' ' +dt.year);
-				this.cash.text(game.sim.data.cash);
+				this.cash.text(game.sim.cash.total);
 				this.student_count.text(game.sim.data.student_population);
 				this.staff_count.text(game.sim.data.staff_population);
 				ticker_internal = 0;
