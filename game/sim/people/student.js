@@ -71,8 +71,8 @@ function (person) {
 
 		this.init = function(x,y){
 
-			// possible "sprite types" (1-4 currently)
-			this.sprite_instance = this.rand(4)-1;
+			// possible "sprite types" (1-8 currently)
+			this.sprite_instance = this.rand(8)-1;
 
 			// assign room & course
 			this.course = this.sim.courses[this.rand(this.sim.courses.length)-1];
