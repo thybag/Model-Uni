@@ -73,9 +73,9 @@ function () {
 			"findTile": function(left, top, right, bottom){
 
 				var join_left 	= 	(tiles[left].type == "road" || tiles[left].type == "big_road" ),
-				 	join_top 		= 	(tiles[top].type == "road" || tiles[top].type == "big_road"),
+				 	join_top 	= 	(tiles[top].type == "road" || tiles[top].type == "big_road"),
 				 	join_right 	= 	(tiles[right].type == "road" || tiles[right].type == "big_road"),
-				 	join_bottom 	= 	(tiles[bottom].type == "road" || tiles[bottom].type == "big_road");
+				 	join_bottom = 	(tiles[bottom].type == "road" || tiles[bottom].type == "big_road");
 
 				// find surrouinding types
 
@@ -118,9 +118,9 @@ function () {
 			"findTile": function(left, top, right, bottom){
 
 				var join_left 	= 	(tiles[left].type == "road"),
-				 	join_top 		= 	(tiles[top].type == "road"),
+				 	join_top 	= 	(tiles[top].type == "road"),
 				 	join_right 	= 	(tiles[right].type == "road"),
-				 	join_bottom 	= 	(tiles[bottom].type == "road");
+				 	join_bottom = 	(tiles[bottom].type == "road");
 
 					if(join_left)	return "lot_exit_w";
 					if(join_right)	return "lot_exit_e";

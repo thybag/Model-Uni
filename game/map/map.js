@@ -163,12 +163,27 @@ function (gen, tiles) {
 			return (tile !== false && tile == 'grass');
 		}
 
+		/**
+		 * tileData
+		 * get data for particular tile
+		 *
+		 * @param (string) tile_name
+		 * @return (object) tile data
+		 */
 		this.tileData = function(tile_type){
 			// If has type, return that 
 			if(typeof this.tiles[tile_type].type !== 'undefined') return this.tiles[this.tiles[tile_type].type];
 			// else, send directy
 			return this.tiles[tile_type];
 		}
+
+		/**
+		 * findTileCost
+		 * Get cost of a particular tile
+		 *
+		 * @param (string) tile_name
+		 * @return (int) tile cost
+		 */
 		this.findTileCost = function(tile_type){
 			// if has cost, use it
 			if(typeof this.tiles[tile_type].cost !== 'undefined') return this.tiles[tile_type].cost;
@@ -231,6 +246,10 @@ function (gen, tiles) {
 			}
 		}
 
+		/**
+		 * makeGraph
+		 * Generates new path finding graph based on map
+		 */
 		this.makeGraph = function(){
 			var nodes = gen.emptyMap(this.h,this.w);
 			for(var x=0; x<this.w;x++){
@@ -248,7 +267,15 @@ function (gen, tiles) {
 			}
 			this.graph = new Graph(nodes);
 		}
-
+		
+		/**
+		 * findPath
+		 * Use Graph to plot route from A to B
+		 *
+		 * @param (tile coords) from
+		 * @param (tile coords) to
+		 * @return (array of coords) Route
+		 */
 		this.findPath = function (from, to){
 			return astar.search(this.graph.nodes, this.graph.nodes[from.x][from.y], this.graph.nodes[to.x][to.y])
 		}

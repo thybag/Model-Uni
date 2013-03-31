@@ -43,7 +43,13 @@ define("game/map/map.generator.js",
 				
 				return map;
 			}
-
+			
+			/**
+			 * Generate empty map
+			 *
+			 * @param w - Width of map in tiles
+			 * @param h - Height of map in tiles
+			 */
 			this.emptyMap = function(w,h){
 				var map = [];
 				for(var y=0; y<h;y++){

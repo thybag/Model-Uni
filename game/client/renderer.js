@@ -81,41 +81,59 @@ define("game/client/renderer.js",[],
 			this.paintEntities();
 		}
 
-		// Use counter step (100 steps between action) combined with direction
-		// to twean move animations for humans
-		this.findHumanAnimationStep = function(move_percent, direction){
+		/** 
+		 * find Human Animation Step
+		 * Rather than updating entity game positions constantly, positions are done
+		 * purely by tile x/y each action tick.
+		 * To fill in the remaining movment, human movements are tweened between their current]
+		 * and next tile position based on how far the entity is from its next action tick.
+		 *
+		 * @param (int) current_step 
+		 * @param (string) direction 
+		 */
+		this.findHumanAnimationStep = function(current_step, direction){
 
-			
-			// Dont animate when time is stopped
-			if(game.sim.action_tick == -1 || direction === false) return {x:50,y:25};
+			// Dont animate when time is stopped or user isn't going anywhere
+			if(game.sim.action_tick == -1 || direction === false) return {"x":50, "y":25};
 
-			move_percent = (move_percent/game.sim.action_tick) *100;
+			// Find step as percentage of action_tick
+			var move_percent = (current_step/game.sim.action_tick) * 100;
 
+			// Convert to isometric
 			x = move_percent = move_percent/2;
 			y = move_percent/2;
-			//down is already correct
+			// Adjust to direction (calcualted for "down" initally)
 			if(direction=='up'){x = -x; y = -y;}
 			if(direction=='left')x = -x;
 			if(direction=='right')y = -y;
 			
+			// Add to tile offsets
 			x = 50 + x;
 			y = 25 + y;
 
-			return {x: Math.floor(x), y : Math.floor(y)};
+			// round and return
+			return {"x": Math.floor(x), "y": Math.floor(y)};
 		}
 
+		/** 
+		 * paintEntities
+		 * Draws students/staff in to game world
+		 *
+		 * @todo Optimize this by not bothering to paint offscreen portions
+		 */
 		this.paintEntities = function(){
-
+			// Clear world
 			this.layers.entities.clear();
-
+			// foreach entity
 			for (var s = 0; s < this.entities.students.length; s++) {
 				var student = this.entities.students[s];
-
+				// If they exist and are visable
 				if(student !== null && student.visable){
-
+					// Find position
 					pos = game.findTileCoords(student.x, student.y);
+					// Find "tweened" position
 					step = this.findHumanAnimationStep(student.counter, student.next_direction());
-
+					// Draw them
 					this.sprite_cache[student.sprite_type]
 						.position(pos.x+step.x+student.x_offset, pos.y+step.y+student.y_offset)
 						.size(5,13)
@@ -217,7 +235,7 @@ define("game/client/renderer.js",[],
 		 * @param scale - scale factor
 		 */
 		this.scale = function(scale){
-
+			// Update all layers with new scale
 			for(var layer in this.layers){
 				world = this.layers[layer];
 				world.dom.style[sjs.tproperty+"Origin"] = "0 0";
@@ -226,23 +244,8 @@ define("game/client/renderer.js",[],
 			    world.dom.height = this.scene.h/scale *1;	
 			}
 		
-
 		    // if viewport is dirty, map will be redrawn
 		    this.viewport.dirty = true;
-		}
-				
+		}		
 	}
 });
-
-/* highlight square DBG
-	_final = this.findTileCoords(xIso,yIso);;
-	aa = document.createElement('div');
-	aa.style.position = 'absolute';
-	aa.style.height = (tile_prop.h-2)*this.viewport.scale+'px';
-	aa.style.width = (tile_prop.w-2)*this.viewport.scale+'px';
-	aa.style.border = 'solid 1px red';
-	aa.style.left = _final.x +'px';
-	aa.style.top = 42+ _final.y+'px';
-	aa.style.zIndex = '99999'; 
-	document.body.appendChild(aa);
-*/
