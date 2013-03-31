@@ -50,12 +50,17 @@ function () {
 						"running_costs": 900,
 						"modifiers" : {"smartness": 2, "bordem": 1, "hunger": 1}
 		},
-
-
 		'campus_shop' : {
+			"title" : "Campus shop",
 			"h":1,
-			"w":1,
-			type:"food"
+			"w":2,
+			"img": 'assets/buildings/shop.png', 
+
+			"capacity": 15,
+			"cost": 7000,
+			"running_costs": 500,
+			"modifiers" : {"hunger": -8},
+			"type":"food"
 		},
 		'health_food_bar' : {
 			type:"food"

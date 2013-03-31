@@ -253,11 +253,13 @@ function (person) {
 			// do i have lectures?
 
 			// what do i want to do most? (fun/eat/drink/party)
-
-			this.thunk("I was unable to do what i wanted. Guess i'll just go back to my room.");
-			this.happiness -= 5; // Not being able to do what they want makes AI's sad
-			// Nothing todo? back to bed
-			this._goHome();
+			if(action===false){
+				this.thunk("I was unable to do what i wanted. Guess i'll just go back to my room.");
+				this.happiness -= 5; // Not being able to do what they want makes AI's sad
+				// Nothing todo? back to bed
+				this._goHome();	
+			}
+			
 		}
 
 		this.enterNextYear = function(){
@@ -309,7 +311,6 @@ function (person) {
 
 		this._findEducation = function(){
 			this.thunk("I want to lean somthing <education>");
-
 			result = this.sim.findRandomStructureByType("education");
 			if(result==false)return false;
 			this.planRouteTo(result);
