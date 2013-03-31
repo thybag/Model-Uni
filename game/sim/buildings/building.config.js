@@ -42,7 +42,7 @@ function () {
 						"h":15,
 						"w":5,
 
-						"img": 'assets/buildings/library.png', 
+						"img": 'assets/buildings/Library.png', 
 
 						"type": "education",
 						"capacity": 500,
