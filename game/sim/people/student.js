@@ -33,6 +33,7 @@ function (person) {
 		this.building_in = null;
 		this.movement_queue = [];
 		this.exploring = false;
+		this.action = 'find_room';
 		
 		this.sprite_type = 'students';
 		this.counter = 0;
@@ -58,6 +59,7 @@ function (person) {
 			if(this.movement_queue.length !==0)return this.movement_queue[0];
 			return false;
 		}
+
 		this.next_direction = function(){
 			if(next = this.next_tile()){
 				if(next.x > this.x) return 'left';
@@ -66,6 +68,15 @@ function (person) {
 				if(next.y > this.y) return 'down';
 			}
 			return false;
+		}
+
+		// Update attribute while maintain constraints (attr min/max)
+		this.updateAttr = function (attribute, change){
+
+			this[attribute] += change;
+
+			if(this[attribute] > 150)	this[attribute] = 150;
+			if(this[attribute] < 0)	this[attribute] = 0;
 		}
 
 
@@ -126,6 +137,12 @@ function (person) {
 		this.action_tick = function(){
 			this.action_counter++;
 
+			// If night, increase tirdness + maybe change mind & go to bed?
+			if(this.sim.is_night() && this.action != 'gobed'){
+				this.updateAttr('tiredness', 2);
+				if(this.tiredness > 20) return this._goToBed();
+			}
+
 			// if exploring, use explore logic
 			if(this.exploring) return this.action_explore();
 
@@ -135,20 +152,30 @@ function (person) {
 				this.thunk("I'm inside a "+ this.building_in.type +" building.");
 				// Apply buildings modifiers
 				for(m in this.building_in.modifiers){
-					this[m] += this.building_in.modifiers[m];
+					this.updateAttr(m, this.building_in.modifiers[m]);
 				}
 
-				// After been in buidling long enough, leave
-				if(this.action_counter > 6){
-					this._exitBuilding();
-					this.action_counter = 0;
-					this.counter = 0;
+				if(this.action == 'gobed'){
+					// Leave in morning
+					if(!this.sim.is_night()){
+						this._exitBuilding();
+						this.action_counter = 0;
+						this.counter = 0;
+					}
+				}else{
+					// After been in buidling long enough, leave
+					if(this.action_counter > 6){
+						this._exitBuilding();
+						this.action_counter = 0;
+						this.counter = 0;
+					}
 				}
+				
 			}else{
 				// Walking modifiers
-				this.hunger++;
-				this.tiredness++;
-				this.fitness++;
+				this.updateAttr('hunger', 1);
+				this.updateAttr('tiredness', 1);
+				this.updateAttr('fitness', 1);
 				// Are we going somewhere?
 				if(this.movement_queue.length != 0){
 
@@ -174,17 +201,18 @@ function (person) {
 		}
 		// Explore action set (students can explore the campus for fun)
 		this.action_explore = function(){
-			this.hunger++;
-			this.tiredness++;
-			this.fitness++;
-			this.bordem--;
+
+			this.updateAttr("hunger", 1);
+			this.updateAttr("tiredness", 1);
+			this.updateAttr("fitness", 1);
+			this.updateAttr("bordem", -1);
 
 			// to tired/hungry to continue? turn back
 			if(this.tiredness > 80 || this.hunger > 80 ){
 
 				this.thunk("I'm tired and hungry and still not there, guess I'll have to turn back.");
-				this.confidence -= 5;
-				this.happiness -= 10;
+				this.updateAttr("confidence ", -5);
+				this.updateAttr("happiness", -10);
 				this._goHome();
 				return;
 			}
@@ -198,9 +226,10 @@ function (person) {
 
 				this.thunk("I found it! awesome.");
 				// Found what they were looking for!
-				this.bordem -= 10;
-				this.confidence += 5;
-				this.happiness += 10;
+				this.updateAttr("bordem", -10);
+				this.updateAttr("confidence", 5);
+				this.updateAttr("happiness", 10);
+	
 				//
 				this.exploring = false;
 				this.decideNextAction();
@@ -220,33 +249,36 @@ function (person) {
 			this.thunk("That is done. Now i will decided my next action.");
 			//1-10 used to randomly change outcomes without needing to cal to many randoms
 			var rdm = this.rand(10);
-
-			if(this.tiredness < 50 && this.hunger < 50){
-				if(this.bordem < 60){
-					action = this._findEducation();
-					if(action===false) this.complain("no_learn");
-				}else{
-
-					if(rdm < 8){
-						action = this._findEntertainment();
+			var is_night = this.sim.is_night();
+			var action = false;
+			
+			if(!action){
+				if(this.tiredness < 50 && this.hunger < 50){
+					if(this.bordem < 60){
+						action = this._findEducation();
+						if(action===false) this.complain("no_learn");
 					}else{
-						action = this._explore();
-					}
 
-					if(action===false) this.complain("no_fun");
+						if(rdm < 8){
+							action = this._findEntertainment();
+						}else{
+							action = this._explore();
+						}
+
+						if(action===false) this.complain("no_fun");
+					}
+				}
+				else
+				{
+					// Eat & sleep - almost like a real person!
+					if(this.tiredness > this.hunger){
+						this._goHome();
+					}else{
+						action = this._findFood();
+						if(action===false) this.complain("no_food");
+					}
 				}
 			}
-			else
-			{
-				// Eat & sleep - almost like a real person!
-				if(this.tiredness > this.hunger){
-					this._goHome();
-				}else{
-					action = this._findFood();
-					if(action===false) this.complain("no_food");
-				}
-			}
-	
 			// critial
 			// am i v tied / v hungry?
 
@@ -304,24 +336,34 @@ function (person) {
 
 
 		this._goHome = function(){
+			this.action = 'gohome';
 			this.thunk("I will go to my room at <"+this.home.id+">");
+			this.exploring = false;
+			this.planRouteTo(this.home);
+		}
+		this._goToBed = function(){
+			this.action = 'gobed';
+			this.thunk("I'm going to bed at  <"+this.home.id+">");
 			this.exploring = false;
 			this.planRouteTo(this.home);
 		}
 
 		this._findEducation = function(){
+			this.action = 'education';
 			this.thunk("I want to lean somthing <education>");
 			result = this.sim.findRandomStructureByType("education");
 			if(result==false)return false;
 			this.planRouteTo(result);
 		}
 		this._findFood = function(){
+			this.action = 'gofood';
 			this.thunk("I want to get some food <food>");
 			result = this.sim.findRandomStructureByType("food");
 			if(result==false)return false;
 			this.planRouteTo(result);
 		}
 		this._findEntertainment = function(){
+			this.action = 'gofun';
 			this.thunk("I want to have fun <fun>");
 			result = this.sim.findRandomStructureByType("fun");
 			if(result==false)return false;
@@ -329,6 +371,7 @@ function (person) {
 		}
 
 		this._findFitness= function(){
+			this.action = 'gofit';
 			this.thunk("I want to get fit <fitness>");
 			result = this.sim.findRandomStructureByType("fun");
 			if(result==false)return false;
@@ -336,6 +379,7 @@ function (person) {
 		}
 
 		this._explore = function(){
+			this.action = 'goexplore';
 			//var dist = 2+Math.round(this.confidence/6); // confident students will explore futher afield.
 			this.exploring = true;
 			var finding = this.randTile();

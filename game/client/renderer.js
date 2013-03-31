@@ -246,6 +246,19 @@ define("game/client/renderer.js",[],
 		
 		    // if viewport is dirty, map will be redrawn
 		    this.viewport.dirty = true;
-		}		
+		}
+
+		this.nightMode = function(enable){
+
+			if(enable === true){
+				keyNode = this.layers.world.dom.parentNode;
+				keyNode.style.opacity = 0.4;
+				$("body").css('background-color','#222');
+			}else{
+				keyNode = this.layers.world.dom.parentNode;
+				keyNode.style.opacity = 1;
+				$("body").css('background-color','#79BAEC');
+			}
+		}	
 	}
 });

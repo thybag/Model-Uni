@@ -8,15 +8,33 @@
 // content
 function (building_config) {
 	return new function(){
+		// vars
+		this.buildings_config = building_config;
+		this.proto_building = require("game/sim/buildings/building.js");
+		this.proto_student = require("game/sim/people/student.js");
+		// prototypes all have references to "simulation"
+		this.proto_building.prototype.sim = this.proto_student.prototype.sim = this;
 
+		//cash
+		this.cash = require("game/sim/cash.js");
+
+		// internals 
+		this.counter = 0;
+		// Time between "World Actions"
+		this.action_tick = -1;//100 = standard
+
+		// Courses
 		this.courses = [
 			{"id":0, "name":"math", "lectures":["james","tim"]  }, 
 			{"id":1,"name":"english", "lectures":["zim"]  },
 			{"id":2,"name":"Computer Science", "lectures":["Bob"]  }
 		];
 
+		// Structures
 		this.structures = [];
+		// Entities
 		this.entities = { "students":[], "staff":[] };
+		// Data
 		this.data = {
 			"university_name" : "My first uni.",
 			"student_population": 0,
@@ -25,36 +43,28 @@ function (building_config) {
 			"acc_capacity": 0,
 			"tot_capacity": 0,
 			// unix timestamp in ms ( *1000 to get real timestamp)
-			"time" : 1379620800000, // 19 sept 2013
-			"next_year_time": 1379707200000 // 20 sept 2013 (first academic year)
+			"time" : 1379660400, // 19 sept 2013
+			"next_year_time": 1379667600, // 20 sept 2013 (first academic year)
+			"is_night": true
+		}	
+
+
+		this.is_night = function(){
+			return (this.data.is_night===true);
 		}
-
-		this.cash = require("game/sim/cash.js");
-
-		// internals 
-		this.counter = 0;
-
-		this.buildings_config = building_config;
-		this.proto_building = require("game/sim/buildings/building.js");
-		this.proto_student = require("game/sim/people/student.js");
-
-		// Time between "World Actions"
-		this.action_tick = -1;//100 = standard
-
-		// prototypes all have references to "simulation"
-		this.proto_building.prototype.sim = this.proto_student.prototype.sim = this;
+		
 
 		this.tick = function(){
 			// Do want want to create a new student
 
 
 			// sync clock
-			if(this.action_tick != -1 && this.counter > (this.action_tick/2)){
+			if(this.action_tick != -1 && this.counter > (this.action_tick*4)){
 
 				// new year at start of term, induct freashers
 				if(this.data.time == this.data.next_year_time) this._newYear();
 
-				this.data.time += 3600000; this.counter=0;
+				this.data.time += 3600; this.counter=0;
 
 			}this.counter++;
 			
@@ -74,7 +84,7 @@ function (building_config) {
 		this._newYear = function(){
 			console.log("INDUCT!");
 			// work out 1 year time..
-			this.data.next_year_time = this.data.next_year_time+31536000;
+			this.data.next_year_time = this.data.next_year_time+31536;
 			// roll over current students
 			for(var i=0;i<this.entities.students;i++){
 				if(this.entities.students[i] !== null) this.entities.students[i].enterNextYear();
@@ -104,20 +114,22 @@ function (building_config) {
 
 		this.getGameDate = function(){
 			var date = {};
-
-			date._date = new Date(this.data.time);
+			date._date = new Date(parseInt(this.data.time+'000'));
 			date.year = date._date.getFullYear();
 			date.month_no = date._date.getMonth();
 		    date.month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.month_no];
 		    date.day = date._date.getDate();
-		    if(date.day < 10) date.day = '0'+date.day;
 		    date.hour = date._date.getHours();
-		    if(date.hour < 10) date.hour = '0'+date.hour;
-		    date.min = '00' ;
-		    //date._date.getMinutes();
-		   // if(date.min < 10) date.min = '0'+date.min;
 
-			//
+		    // 10pm - 8am = night
+		    this.data.is_night = (date.hour <= 8 || date.hour >= 22);
+		    game.renderer.nightMode(this.data.is_night);
+
+		    // Add leading 0s
+		    if(date.day < 10) date.day = '0'+date.day;
+		    if(date.hour < 10) date.hour = '0'+date.hour;
+		    date.min = '00';
+
 			return date;
 
 		}
