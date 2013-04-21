@@ -31,6 +31,7 @@ function (person) {
 		// Internals
 		this.building_going_to = null;
 		this.building_in = null;
+		this.building_stay_length = 6;
 		this.movement_queue = [];
 		this.exploring = false;
 		this.action = 'find_room';
@@ -139,8 +140,8 @@ function (person) {
 
 			// If night, increase tirdness + maybe change mind & go to bed?
 			if(this.sim.is_night() && this.action != 'gobed'){
-				this.updateAttr('tiredness', 2);
-				if(this.tiredness > 20) return this._goToBed();
+				this.updateAttr('tiredness', 1);
+				if(this.tiredness > 40) return this._goToBed();
 			}
 
 			// if exploring, use explore logic
@@ -155,21 +156,13 @@ function (person) {
 					this.updateAttr(m, this.building_in.modifiers[m]);
 				}
 
-				if(this.action == 'gobed'){
-					// Leave in morning
-					if(!this.sim.is_night()){
-						this._exitBuilding();
-						this.action_counter = 0;
-						this.counter = 0;
-					}
-				}else{
-					// After been in buidling long enough, leave
-					if(this.action_counter > 6){
-						this._exitBuilding();
-						this.action_counter = 0;
-						this.counter = 0;
-					}
+				// After been in buidling long enough, leave
+				if(this.action_counter > this.building_stay_length){
+					this._exitBuilding();
+					this.action_counter = 0;
+					this.counter = 0;
 				}
+				
 				
 			}else{
 				// Walking modifiers
@@ -182,7 +175,13 @@ function (person) {
 					if(this.movement_queue.length==1){
 						// empty queue
 						this.movement_queue.shift();
-						this._enterBuilding();
+
+						if(this.action == 'gobed'){
+							this._enterBuilding(24);
+						}else{
+							this._enterBuilding();
+						}
+						
 						this.action_counter = 0;
 
 					}else{
@@ -302,11 +301,14 @@ function (person) {
 
 		}
 
-		this._enterBuilding = function(){
+		this._enterBuilding = function(stay_length){
+
 			this.thunk("Entering <" +  this.building_going_to.type +"> building.");
 			this.building_in = this.building_going_to;
 			this.building_going_to = null;
 			this.building_in.occupancy++;
+
+			this.building_stay_length = (typeof stay_length === 'undefined') ? this.building_in.stay_length : stay_length;
 
 			this.visable = false;
 						

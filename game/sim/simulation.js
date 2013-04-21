@@ -64,7 +64,7 @@ function (building_config) {
 				// new year at start of term, induct freashers
 				if(this.data.time == this.data.next_year_time) this._newYear();
 
-				this.data.time += 3600; this.counter=0;
+				this.data.time += 1800; this.counter=0;
 
 			}this.counter++;
 			
@@ -122,7 +122,7 @@ function (building_config) {
 		    date.hour = date._date.getHours();
 
 		    // 10pm - 8am = night
-		    this.data.is_night = (date.hour <= 8 || date.hour >= 22);
+		    this.data.is_night = (date.hour >= 22 || date.hour <= 7);
 		    game.renderer.nightMode(this.data.is_night);
 
 		    // Add leading 0s
